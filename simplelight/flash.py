@@ -5,10 +5,11 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(18,GPIO.OUT)
 
-print "LED on"
-GPIO.output(18,GPIO.HIGH)
+for _ in range(10):
+	GPIO.output(18,GPIO.HIGH)
 
-time.sleep(1)
+	time.sleep(.25)
 
-print "LED off"
-GPIO.output(18,GPIO.LOW)
+	GPIO.output(18,GPIO.LOW)
+
+	time.sleep(.25)
