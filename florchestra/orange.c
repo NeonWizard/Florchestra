@@ -265,14 +265,14 @@ int main(int argc, char *argv[])
    }
 
    if (arc != 1){
-      printf("Orange takes one parameter!")
-      return 1
+      printf("Orange takes one parameter!");
+      return 1;
    } else {
       if (argv[0] == 0){
-         playSong(song1, song1_tempo)
+         playSong(song1, song1_tempo);
       } else {
          playSong(song2, song2_tempo);
       }
-      return 0
+      return 0;
    }
 }
