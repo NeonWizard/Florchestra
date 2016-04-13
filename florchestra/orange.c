@@ -263,12 +263,10 @@ int main(int argc, char *argv[])
       printf("init failed - Exiting\n");
       return 1;
    }
-   resetMotor();
    if (argc != 2){
       printf("Orange takes one parameter!");
       return 1;
    } else {
-      printf(argv[1]);
       if (strcmp(argv[1], "song1")==0){
          playSong(song1, song1_tempo);
       } else if (strcmp(argv[1], "song2")==0){
