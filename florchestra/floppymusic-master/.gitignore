@@ -1,0 +1,6 @@
+drives.cfg
+*.swp
+midi/
+obj/
+floppymusic
+src/version.hpp
