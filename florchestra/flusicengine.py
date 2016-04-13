@@ -37,18 +37,25 @@ floppyDelays = [[round(floppyConv/noteFreq) for noteFreq in octave] for octave i
 #   Songs
 # ----------
 # Song format: Note, octave, length
-# For now tempo is assumed to be 120 bpm
 
 # C major scale
+song1_tempo = 220
 song1 = [
-	["Cn", 1, 5],
-	["Dn", 1, 5],
-	["En", 1, 5],
-	["Fn", 1, 5],
-	["Gn", 1, 5],
-	["An", 1, 5],
-	["Bn", 1, 5],
-	["Cn", 2, 5]
+	["Cn", 2, 1],
+	["Dn", 2, 1],
+	["En", 2, 1],
+	["Fn", 2, 1],
+	["Gn", 2, 1],
+	["An", 2, 1],
+	["Bn", 2, 1],
+	["Cn", 3, 1],
+	["Bn", 2, 1],
+	["An", 2, 1],
+	["Gn", 2, 1],
+	["Fn", 2, 1],
+	["En", 2, 1],
+	["Dn", 2, 1],
+	["Cn", 2, 1]
 ]
 
 # --------------
@@ -117,20 +124,23 @@ def rest(length):
 	while millis() < endTime:
 		time.sleep(0.005)
 
-def playSong(song):
-	noteLen = 60000/120.0 # 120 = tempo
+def playSong(song, tempo):
+	noteLen = 60000.0/tempo
 
 	for note in song:
 		length = note[2] * noteLen
 		if note == "Zz":
 			rest(length)
 		else:
-			playNote(note[0], note[1], (7*length)/8.0)
-			rest(length/8.0)
+			playNote(note[0], note[1], length)
 
 def main():
 	print("Reseting motor")
 	#resetMotor()
 
-	print("Playing the C Major Scale")
-	playSong(song1)
+	while True:
+		print("Playing the C Major Scale")
+		playSong(song1, song1_tempo)
+
+if __name__ == "__main__":
+	main()
