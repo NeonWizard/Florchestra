@@ -41,21 +41,21 @@ floppyDelays = [[round(floppyConv/noteFreq) for noteFreq in octave] for octave i
 # C major scale
 song1_tempo = 220
 song1 = [
-	["Cn", 2, 1],
-	["Dn", 2, 1],
-	["En", 2, 1],
-	["Fn", 2, 1],
-	["Gn", 2, 1],
-	["An", 2, 1],
-	["Bn", 2, 1],
 	["Cn", 3, 1],
-	["Bn", 2, 1],
-	["An", 2, 1],
-	["Gn", 2, 1],
-	["Fn", 2, 1],
-	["En", 2, 1],
-	["Dn", 2, 1],
-	["Cn", 2, 1]
+	["Dn", 3, 1],
+	["En", 3, 1],
+	["Fn", 3, 1],
+	["Gn", 3, 1],
+	["An", 3, 1],
+	["Bn", 3, 1],
+	["Cn", 3, 1],
+	["Bn", 3, 1],
+	["An", 3, 1],
+	["Gn", 3, 1],
+	["Fn", 3, 1],
+	["En", 3, 1],
+	["Dn", 3, 1],
+	["Cn", 3, 1]
 ]
 
 # --------------
