@@ -264,7 +264,7 @@ int main(int argc, char *argv[])
       return 1;
    }
 
-   if (arc != 1){
+   if (argc != 1){
       printf("Orange takes one parameter!");
       return 1;
    } else {
