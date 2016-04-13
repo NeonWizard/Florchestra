@@ -274,7 +274,6 @@ int main(int argc, char *argv[])
       } else if (strcmp(argv[1], "song2")==0){
          playSong(song2, song2_tempo);
       }
-      playSong(song2, song2_tempo);
       return 0;
    }
 }
