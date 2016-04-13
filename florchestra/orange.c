@@ -148,6 +148,27 @@ const int song2[][3] = {
    { -1, -1, -1 }
 };
 
+// Metal crusher intro
+const int song3_tempo = 115 * 16;
+const int song3[][3] = {
+   {Eb, 3, 3 },      // Bar 1
+   {Eb, 3, 1 },
+   {Bn, 3, 2 },
+   {Bn, 3, 2 },
+
+   {Bn, 2, 3 },
+   {Bn, 2, 1 },
+   {Eb, 1, 4 },
+
+   {Eb, 1, 3 },
+   {Eb, 1, 1 },
+   {Eb, 1, 2 },
+   {Eb, 1, 2 },
+
+   {Ab, 2, 8 },
+
+   {-1, -1, -1}
+};
 
 /**
  *
@@ -271,6 +292,8 @@ int main(int argc, char *argv[])
          playSong(song1, song1_tempo);
       } else if (strcmp(argv[1], "song2")==0){
          playSong(song2, song2_tempo);
+      } else if (strcmp(argv[1], "song3")==0){
+         playSong(song3, song3_tempo);
       }
       return 0;
    }
