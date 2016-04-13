@@ -2,7 +2,7 @@
 #   Written by Wes Miravete
 #      Started: 4/12/16
 # ===========================
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import time
 
 startTime = int(round(time.time()*1000))
@@ -54,17 +54,17 @@ song1 = [
 # --------------
 #   GPIO Setup
 # --------------
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 
-# # PI Pins
-# stepPin = 18 # Step (floppy pin 20)
-# dirPin = 23 # Direction (floppy pin 18)
-# writePin = 24 # Write (floppy pin 22)
+# PI Pins
+stepPin = 18 # Step (floppy pin 20)
+dirPin = 23 # Direction (floppy pin 18)
+writePin = 24 # Write (floppy pin 22)
 
-# GPIO.setup(stepPin, GPIO.OUT)
-# GPIO.setup(dirPin, GPIO.OUT)
-# GPIO.setup(writePin, GPIO.OUT)
+GPIO.setup(stepPin, GPIO.OUT)
+GPIO.setup(dirPin, GPIO.OUT)
+GPIO.setup(writePin, GPIO.OUT)
 
 # -------------------
 #    Functionality
