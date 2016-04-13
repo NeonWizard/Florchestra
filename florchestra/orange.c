@@ -149,7 +149,7 @@ const int song2[][3] = {
 };
 
 // Metal crusher intro
-const int song3_tempo = 115 * 16;
+const int song3_tempo = 115 * 8;
 const int song3[][3] = {
    {Ef, 3, 3 },      // Bar 1
    {Ef, 3, 1 },
