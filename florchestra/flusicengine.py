@@ -11,6 +11,8 @@ octave1 = ["Cn", "Cs", "Dn", "Ds", "En", "Fn", "Fs", "Gn", "Gs", "An", "As", "Bn
 # Octave with flats and the remaining sharps
 octave2 = ["Bs", "Df", "Dn2", "Ef", "En2", "Es", "Gf", "Gn2", "Af", "An2", "Bf", "Bn2", "Zz2"]
 
+notecycle = [[note, octave, 1] for octave in range(3) for note in octave1]
+
 # Frequencies of notes in hundredths of Hertz
 # Each set is an octave, C to B (including black notes)
 frequencies = [
@@ -114,6 +116,8 @@ def main(argv):
 		playSong(song2, song2_tempo)
 	elif argv[1]=="song3":
 		playSong(song3, song3_tempo)
+	elif argv[1]=="cycle":
+		playSong(notecycle, 120)
 
 if __name__ == "__main__":
 	main(sys.argv)
