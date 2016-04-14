@@ -2,6 +2,7 @@
 #   Written by Wes Miravete
 #      Started: 4/12/16
 # ===========================
+import sys
 from wiringpi import *
 from songs import *
 
@@ -99,11 +100,20 @@ def playSong(song, tempo):
 			playNote(note[0], note[1], (length*7)/8.0)
 			rest(length/8.0)
 
-def main():
+def main(argv):
+	if len(argv) != 2:
+		print("Flusic engine takes one parameter!")
+		return 1
+
 	print("Reseting motor")
 	resetMotor()
 
-	playSong(song2, song2_tempo)
+	if argv[1]=="song1":
+		playSong(song1, song1_tempo)
+	elif argv[1]=="song2":
+		playSong(song2, song2_tempo)
+	elif argv[1]=="song3":
+		playSong(song3, song3_tempo)
 
 if __name__ == "__main__":
-	main()
+	main(sys.argv)
