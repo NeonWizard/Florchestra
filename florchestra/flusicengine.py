@@ -116,6 +116,8 @@ def main(argv):
 		playSong(song2, song2_tempo)
 	elif argv[1]=="song3":
 		playSong(song3, song3_tempo)
+	elif argv[1]=="song4":
+		playSong(song4, song4_tempo)
 	elif argv[1]=="cycle":
 		playSong(notecycle, 120)
 
