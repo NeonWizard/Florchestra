@@ -2,12 +2,8 @@
 #   Written by Wes Miravete
 #      Started: 4/12/16
 # ===========================
-import RPi.GPIO as GPIO
-import time
-
-startTime = int(round(time.time()*1000))
-def millis():
-	return int(round(time.time()*1000))-startTime
+from wiringpi import *
+from songs import *
 
 # Octave with naturals and sharps (Zz = rest)
 octave1 = ["Cn", "Cs", "Dn", "Ds", "En", "Fn", "Fs", "Gn", "Gs", "An", "As", "Bn", "Zz"]
@@ -29,118 +25,85 @@ frequencies = [
 floppyConv = 31400000.0
 
 # Convert the frequences to floppy delays ahead of time
-floppyDelays = [[round(floppyConv/noteFreq) for noteFreq in octave] for octave in frequencies]
+floppyDelays = [[floppyConv/noteFreq for noteFreq in octave] for octave in frequencies]
 
 
-
-# ----------
-#   Songs
-# ----------
-# Song format: Note, octave, length
-
-# C major scale
-song1_tempo = 220
-song1 = [
-	["Cn", 3, 1],
-	["Dn", 3, 1],
-	["En", 3, 1],
-	["Fn", 3, 1],
-	["Gn", 3, 1],
-	["An", 3, 1],
-	["Bn", 3, 1],
-	["Cn", 3, 1],
-	["Bn", 3, 1],
-	["An", 3, 1],
-	["Gn", 3, 1],
-	["Fn", 3, 1],
-	["En", 3, 1],
-	["Dn", 3, 1],
-	["Cn", 3, 1]
-]
-
-# --------------
-#   GPIO Setup
-# --------------
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
+# ------------------
+#   Wiringpi setup
+# ------------------
+wiringPiSetupGpio()
 
 # PI Pins
+dirPin = 17 # Direction (floppy pin 18)
 stepPin = 18 # Step (floppy pin 20)
-dirPin = 23 # Direction (floppy pin 18)
-writePin = 24 # Write (floppy pin 22)
+# writePin = 24 # Write (floppy pin 22)
 
-GPIO.setup(stepPin, GPIO.OUT)
-GPIO.setup(dirPin, GPIO.OUT)
-GPIO.setup(writePin, GPIO.OUT)
+pinMode(stepPin, 1)
+pinMode(dirPin, 1)
+# pinMode(writePin, 1)
 
 # -------------------
 #    Functionality
 # -------------------
-
-# Easy of pin toggling, gets painstaking to type the entire thing :P
-def pOn(num):
-	GPIO.output(num, GPIO.HIGH)
-	time.sleep(.005)
-def pOff(num):
-	GPIO.output(num, GPIO.LOW)
-	time.sleep(.005)
-
 def resetMotor():
-	# To reset, move all the way in one direction then halfway back the other
-	pOff(dirPin)
-	for _ in range(75): # 75 tends to be the magic number for the distance of the drive
-		pOn(stepPin)
-		pOff(stepPin)
-	pOn(dirPin)
-	for _ in range(37):
-		pOn(stepPin)
-		pOff(stepPin)
-	time.sleep(.5)
+	digitalWrite(dirPin, 0)
+	for _ in range(10):
+		digitalWrite(stepPin, 1)
+		digitalWrite(stepPin, 0)
+		delay(1)
+
+	digitalWrite(dirPin, 1)
+	for _ in range(5):
+		digitalWrite(stepPin, 1)
+		digitalWrite(stepPin, 0)
+		delay(1)
+
+	delay(400)
 
 def playNote(note, octave, length):
+	print note
 	# Find the note delay
 	try:
 		ind = octave1.index(note)
 	except:
 		ind = octave2.index(note)
-	noteDelay = floppyDelays[octave][ind]*10
+	noteDelay = int(floppyDelays[octave][ind]*10)
 
 	direction = 1
 
 	endTime = millis() + length
 	while millis() < endTime:
+		digitalWrite(dirPin, direction)
 		if direction == 0:
-			pOff(dirPin)
 			direction = 1
 		else:
-			pOn(dirPin)
 			direction = 0
-		pOn(stepPin)
-		pOff(stepPin)
-		time.sleep(noteDelay/1000.0/1000.0) # Convert to microseconds lel
+
+		digitalWrite(stepPin, 1)
+		digitalWrite(stepPin, 0)
+		delayMicroseconds(noteDelay)
 
 def rest(length):
 	endTime = millis() + length
 	while millis() < endTime:
-		time.sleep(0.005)
+		delay(5)
 
 def playSong(song, tempo):
 	noteLen = 60000.0/tempo
 
 	for note in song:
 		length = note[2] * noteLen
-		if note == "Zz":
+		if note[0] == "Zz":
 			rest(length)
 		else:
-			playNote(note[0], note[1], length)
+			playNote(note[0], note[1], (length*7)/8.0)
+			rest(length/8.0)
 
 def main():
 	print("Reseting motor")
-	#resetMotor()
+	resetMotor()
 
-	while True:
-		print("Playing the C Major Scale")
-		playSong(song1, song1_tempo)
+	playSong(song2, song2_tempo)
 
 if __name__ == "__main__":
 	main()
