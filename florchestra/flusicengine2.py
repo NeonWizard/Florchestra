@@ -3,13 +3,13 @@
 #      Started: 4/12/16
 # ===========================
 import sys
-from os import isfile
+from os.path import isfile
 from wiringpi import *
-import thread
+import threading
 
 class Frive:
 	def __init__(self, manager, dirPin, stepPin, num):
-		self._manager = manager
+		self._frivemanager = manager
 
 		self.num = num
 		self.dirPin, self.stepPin = dirPin, stepPin
@@ -30,31 +30,27 @@ class Frive:
 		delay(400)
 
 
-	def rest(length):
+	def rest(self, length):
 		endTime = millis() + length
 		while millis() < endTime:
 			delay(5)
 
-	def playNote(note, octave, length):
+	def playNote(self, note, octave, length):
 		# Find the note delay
-		try:
-			ind = octave1.index(note)
-		except:
-			ind = octave2.index(note)
-		noteDelay = int(floppyDelays[octave][ind]*10)
+		noteDelay = self._frivemanager.findDelay(note, octave)
 
 		direction = 1
 
 		endTime = millis() + (length*7/8.0)
 		while millis() < endTime:
-			digitalWrite(dirPin, direction)
+			digitalWrite(self.dirPin, direction)
 			if direction == 0:
 				direction = 1
 			else:
 				direction = 0
 
-			digitalWrite(stepPin, 1)
-			digitalWrite(stepPin, 0)
+			digitalWrite(self.stepPin, 1)
+			digitalWrite(self.stepPin, 0)
 			delayMicroseconds(noteDelay)
 		self.rest(length/8.0)
 
@@ -90,7 +86,14 @@ class FriveManager:
 
 	def getId(self):
 		self._curId += 1
-		return self.curId-1
+		return self._curId-1
+
+	def findDelay(self, note, octave):
+		try:
+			ind = self.octave1.index(note)
+		except:
+			ind = self.octave2.index(note)
+		return int(self.floppyDelays[octave][ind]*10)
 
 	def setupFrive(self, pinNums):
 		# pinNums should be a two-item tuple: (direction pin number, step pin number)
@@ -113,11 +116,12 @@ class Song:
 		self.tracks = {}
 		with open(filename, 'r') as openFile:
 			for line in openFile:
-				line = line.rstrip("\n").lower()
-				if line[:5] == "tempo":
+				line = line.rstrip("\n")
+				if line == "": continue
+				if line[:5] == "Tempo":
 					self.tempo = int(line.split(" ")[1])
 					self.noteLen = 60000.0/self.tempo
-				elif line[:5] == "track":
+				elif line[:5] == "Track":
 					curtrack = int(line.split(" ")[1])
 					self.tracks[curtrack] = []
 				else:
@@ -128,15 +132,22 @@ class Song:
 		for note in track:
 			length = note[2] * self.noteLen
 			if note[0] == "Zz":
-				self.frivemanager.frives[friveid].rest(length)
+				self._frivemanager.frives[friveid].rest(length)
 			else:
-				self.frivemanager.frives[friveid].playNote(note[0], note[1], length)
+				self._frivemanager.frives[friveid].playNote(note[0], note[1], length)
 
 	def play(self, frivemanager):
 		self._frivemanager = frivemanager
-		for friveid, track in self.tracks:
+		threads = []
+		for friveid in self.tracks:
+			track = self.tracks[friveid]
 			if friveid >= len(self._frivemanager.frives): return
-			thread.start_new_thread(self.playTrack, (self, track, friveid))
+			thread = threading.Thread(target=self.playTrack, args=(track, friveid))
+			thread.start()
+			threads.append(thread)
+
+		for thread in threads:
+			thread.join()
 
 
 
@@ -148,6 +159,7 @@ def main(argv):
 
 	FM = FriveManager()
 	FM.setupFrive((17, 18))
+	#FM.setupFrive((13, 26))
 
 	s = Song(argv[1])
 	s.play(FM)	
