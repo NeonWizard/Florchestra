@@ -2,7 +2,7 @@
 #   Written by Wes Miravete
 #      Started: 4/12/16
 # ===========================
-import sys
+import sys, random
 from os.path import isfile
 from wiringpi import *
 
@@ -88,7 +88,7 @@ class FriveManager:
 	floppyConv = 31400000.0
 
 	# Convert the frequences to floppy delays ahead of time
-	floppyDelays = [[floppyConv/noteFreq for noteFreq in octave] for octave in frequencies]
+	floppyDelays = [[floppyConv/noteFreq*10 for noteFreq in octave] for octave in frequencies]
 
 	def __init__(self):
 		wiringPiSetupGpio()
@@ -128,11 +128,7 @@ class FriveManager:
 		frive.resetMotor()
 		self.frives.append(frive)
 
-	def tick(self):
-		m = micros()
-		delta = m-lastmicros
-		lastmicros = m
-
+	def tick(self, delta):
 		for index, frive in enumerate(self.frives):
 			if self.friveTime[index][0]>0: # If this frive is active
 				self.friveTime[index][1] += delta # Total time elapsed since last pin toggle
@@ -141,8 +137,12 @@ class FriveManager:
 					self.friveTime[index][1] = 0
 
 	def start(self):
+		lastmicros = micros()
 		while True:
-			self.tick()
+			m = micros()
+			delta = m-lastmicros
+			lastmicros = m
+			self.tick(delta)
 
 
 
@@ -194,7 +194,11 @@ def main(argv):
 
 	FM = FriveManager()
 	FM.setupFrive((17, 18))
-	#FM.setupFrive((13, 26))
+	FM.setupFrive((13, 26))
+
+	FM.friveTime[0][0] = FM.floppyDelays[1][0]
+	FM.friveTime[1][0] = FM.floppyDelays[2][0]
+	FM.start()
 
 	#s = Song(argv[1])
 	#s.play(FM)	
