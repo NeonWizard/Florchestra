@@ -1,0 +1,16 @@
+Track 0
+Cn 2 1
+Dn 2 1
+En 2 1
+Fn 2 1
+Gn 2 1
+An 2 1
+Bn 2 1
+Cn 3 1
+Bn 2 1
+An 2 1
+Gn 2 1
+Fn 2 1
+En 2 1
+Dn 2 1
+Cn 2 1
