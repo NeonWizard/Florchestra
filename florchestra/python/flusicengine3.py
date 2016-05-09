@@ -2,7 +2,7 @@
 #   Written by Wes Miravete
 #      Started: 4/12/16
 # ===========================
-import sys, random
+import sys
 from os.path import isfile
 from wiringpi import *
 
@@ -31,7 +31,7 @@ class Frive:
 	# 	while millis() < endTime:
 	# 		delay(5)
 
-	def togglePin(self):
+	def armTick_slide(self):
 		# Switch directions when ends have been reached
 		if self.curPos >= self.maxPosition:
 			self.curState[0] = 1
@@ -48,6 +48,14 @@ class Frive:
 
 		digitalWrite(self.stepPin, self.curState[1]) # TOGGLE the step pin
 		self.curState[1] = not self.curState[1]
+
+	def armTick_oscillate(self):
+		# Move one direction, then the opposite direction on the next movement
+		digitalWrite(self.dirPin, self.curState[0])
+		self.curState[0] = not self.curState[0]
+
+		digitalWrite(self.stepPin, 1)
+		digitalWrite(self.stepPin, 0)
 
 	# def playNote(self, note, octave, length):
 	# 	# Find the note delay
@@ -99,7 +107,7 @@ class FriveManager:
 		self.curSong = None
 
 		self.frives = []
-		self.friveTime = [[0, 0] for _ in range(8)] # Frequencies and current ticks for each of the 8 drives
+		self.friveTime = [[0, 0, 0] for _ in range(8)] # Frequencies, current ticks, and current note duration for each of the 8 possible drives
 
 	def getId(self):
 		self._curId += 1
@@ -133,56 +141,59 @@ class FriveManager:
 			if self.friveTime[index][0]>0: # If this frive is active
 				self.friveTime[index][1] += delta # Total time elapsed since last pin toggle
 				if self.friveTime[index][1] >= self.friveTime[index][0]:
-					frive.togglePin()
+					frive.armTick_slide()
 					self.friveTime[index][1] = 0
 
-	def start(self):
+	def changeNote(self, friveID, noteinfo):
+		name, octave, length = noteinfo
+
+		frequency = self.findDelay(name, octave)
+
+		self.friveTime[friveId][0] = frequency
+		self.friveTime[friveId][2] = length
+
+	def start(self, song):
 		lastmicros = micros()
 		while True:
+			# Determine delta
 			m = micros()
 			delta = m-lastmicros
 			lastmicros = m
+
+			# Tick with the determined delta
 			self.tick(delta)
 
+			# Read the song and make adjustments to floppy note delays
+#			song.getNotes()
 
 
-# class Song:
-# 	def __init__(self, filename):
-# 		self.tracks = {}
-# 		with open(filename, 'r') as openFile:
-# 			for line in openFile:
-# 				line = line.rstrip("\n")
-# 				if line == "": continue
-# 				if line[:5] == "Tempo":
-# 					self.tempo = int(line.split(" ")[1])
-# 					self.noteLen = 60000.0/self.tempo
-# 				elif line[:5] == "Track":
-# 					curtrack = int(line.split(" ")[1])
-# 					self.tracks[curtrack] = []
-# 				else:
-# 					name, octave, length = line.split(" ")
-# 					self.tracks[curtrack].append([name, int(octave), int(length)])
+class Song:
+	def __init__(self, filename):
+		self.tracks = {}
+		with open(filename, 'r') as openFile:
+			for line in openFile:
+				line = line.rstrip("\n")
+				if line == "": continue
+				if line[:5] == "Tempo":
+					self.tempo = int(line.split(" ")[1])
+					self.noteLen = 60000.0/self.tempo
+				elif line[:5] == "Track":
+					curtrack = int(line.split(" ")[1])
+					self.tracks[curtrack] = []
+				else:
+					name, octave, length = line.split(" ")
+					self.tracks[curtrack].append([name, int(octave), int(length)])
 
-# 	def playTrack(self, track, friveid):
-# 		for note in track:
-# 			length = note[2] * self.noteLen
-# 			if note[0] == "Zz":
-# 				self._frivemanager.frives[friveid].rest(length)
-# 			else:
-# 				self._frivemanager.frives[friveid].playNote(note[0], note[1], length)
+	def playTrack(self, track, friveid):
+		for note in track:
+			length = note[2] * self.noteLen
+			if note[0] == "Zz":
+				self._frivemanager.frives[friveid].rest(length)
+			else:
+				self._frivemanager.frives[friveid].playNote(note[0], note[1], length)
 
-# 	def play(self, frivemanager):
-# 		self._frivemanager = frivemanager
-# 		threads = []
-# 		for friveid in self.tracks:
-# 			track = self.tracks[friveid]
-# 			if friveid >= len(self._frivemanager.frives): return
-# 			thread = threading.Thread(target=self.playTrack, args=(track, friveid))
-# 			thread.start()
-# 			threads.append(thread)
-
-# 		for thread in threads:
-# 			thread.join()
+	def getNotes(self):
+		return [i[0]]
 
 
 
@@ -198,10 +209,10 @@ def main(argv):
 
 	FM.friveTime[0][0] = FM.floppyDelays[1][0]
 	FM.friveTime[1][0] = FM.floppyDelays[2][0]
-	FM.start()
 
-	#s = Song(argv[1])
-	#s.play(FM)	
+#	s = Song(argv[1])
+
+	FM.start("swag")
 
 	# if argv[1]=="song1":
 	# 	playSong(song1, song1_tempo)
