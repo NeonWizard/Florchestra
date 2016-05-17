@@ -64,7 +64,6 @@ def resetMotor():
 	delay(400)
 
 def playNote(note, octave, length):
-	print note
 	# Find the note delay
 	try:
 		ind = octave1.index(note)
@@ -94,8 +93,11 @@ def rest(length):
 def playSong(song, tempo):
 	noteLen = 60000.0/tempo
 
+	print "Note | Octave | Note value | Time duration\n"
+
 	for note in song:
 		length = note[2] * noteLen
+		print note[0] + "\t" + str(note[1]) + "\t" + str(note[2]) + "\t%.2f" % n_length
 		if note[0] == "Zz":
 			rest(length)
 		else:
