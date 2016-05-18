@@ -1,0 +1,2 @@
+Using PWM: https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=113916
+Using wiringPi: http://wiringpi.com/reference/core-functions/
