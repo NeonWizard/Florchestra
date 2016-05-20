@@ -45,12 +45,8 @@ byte MAX_POSITIONS[] = {74, 74};
 byte currentPositions[] = {0, 0};
 byte currentDirection[] = {0, 0};
 // Current period is multiplied by resolution. So a note is held for currentPeriod[x] cycles
-unsigned int currentPeriod[] = {
-	10, 10
-};
-unsigned int currentTick[] = {
-	0, 0
-};
+static unsigned int currentPeriod[2] = {0, 0};
+unsigned int currentTick[2] = {0, 0};
 
 // =============
 //   Functions
@@ -72,26 +68,39 @@ void stepFrive(byte frive)
 	{
 		currentDirection[frive] = 1;
 		digitalWrite(pins[frive][0], 1);
-
-		currentPositions[frive]--;
+		std::cout << "Switched 1" << std::endl;
 	}
 	else if (currentPositions[frive] <= 0)
 	{
 		currentDirection[frive] = 0;
 		digitalWrite(pins[frive][0], 0);
-
-		currentPositions[frive]++;
+		std::cout << "Switched 0" << std::endl;
 	}
 
 	digitalWrite(pins[frive][1], 1);
 	digitalWrite(pins[frive][1], 0);
+
+	if (currentDirection[frive] == 1)
+	{
+		currentPositions[frive] -= 1;
+	}
+	else
+	{
+		currentPositions[frive] += 1;
+	}
+
 }
 
 void tick()
 {
+	static unsigned int time = 0;
+	static unsigned int lasttime = 0;
+	time = micros();
+	unsigned int delta = time-lasttime;
+	lasttime = time;
 	if (currentPeriod[0]>0)
 	{
-		currentTick[0]++;
+		currentTick[0] += delta;
 		if (currentTick[0] >= currentPeriod[0])
 		{
 			stepFrive(0);
@@ -100,13 +109,14 @@ void tick()
 	}
 	if (currentPeriod[1]>0)
 	{
-		currentTick[1]++;
+		currentTick[1] += delta;
 		if (currentTick[1] >= currentPeriod[1])
 		{
 			stepFrive(1);
 			currentTick[1]=0;
 		}
 	}
+	delayMicroseconds(5);
 	// if (currentPeriod[2]>0)
 	// {
 	// 	currentTick[2]++;
@@ -144,11 +154,17 @@ int main()
 	setup();
 	std::cout << "All set up!" << std::endl;
 	resetAll();
+	delay(2000);
 	std::cout << "Everything reset." << std::endl;
+
+	std::cout << "Setting the note frequencies...\n";
+	currentPeriod[0] = 10000;
+	currentPeriod[1] = 10000;
+	std::cout << "Done." << std::endl;
 
 	while(1)
 	{
-		// tick();
+		tick();
 	}
 
 	return 0;
