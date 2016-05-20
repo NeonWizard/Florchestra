@@ -1,11 +1,3 @@
-// Some general information first of all:
-// According to the frequencies page on musical notes, B8 is at a frequency of 7902.13 hz
-// The arduino program I found has a resolution of 40 uS, or 25k Hz.
-// ???
-// So far I find that absolutely pointless and unachievable on a pi.
-// So I'm going to set the base resolution at 120 uS (achievable?? maybe?? get ready for ultimate speed saving code)
-// Also, if I on-off the step pin at the same time I don't have to toggle it and can double the resolution
-
 // Notes:
 // Try to use as small of types as you can for optimization purposes
 // Avoid operations and conversions when possible
@@ -14,20 +6,19 @@
 // Temporary note:
 // Toggling the pin might be neccessary because if the program runs too fast the writing might be overlooked
 
+// Todo:
+// Add duration to notes
+
 #include <stdint.h>
 #include <iostream>
 #include <wiringPi.h>
+#include <wiringSerial.h>
 
 typedef uint8_t byte;
 
-// =============================
-//  Glooooobbbbaaallllss *hiss*
-// =============================
-// -----------
-//  Constants
-// -----------
-const byte RESOLUTION = 120;
-
+// =========
+//  Globals
+// =========
 // ------------------------------
 //  Individual frive information
 // ------------------------------
@@ -40,18 +31,19 @@ byte pins[2][2] = {
 byte friveCount = 2;
 
 // 3.5" frives have 80 tracks and 5.25" have 50
-// Subtract two to add a bit of padding
-byte MAX_POSITIONS[] = {74, 74};
+// Subtract 8 to add a bit of padding
+byte MAX_POSITIONS[]    = {72, 72};
 byte currentPositions[] = {0, 0};
 byte currentDirection[] = {0, 0};
-// Current period is multiplied by resolution. So a note is held for currentPeriod[x] cycles
-static unsigned int currentPeriod[2] = {0, 0};
-unsigned int currentTick[2] = {0, 0};
+
+unsigned int currentPeriod[2]   = {0, 0}; // Current period is how long until another step
+unsigned int currentDuration[2] = {0, 0}; // Current duration is how long the note is held
+unsigned int currentTick[2]     = {0, 0}; // Counts how long has passed since the frive has been stepped
 
 // =============
 //   Functions
 // =============
-void setup()
+int setup()
 {
 	wiringPiSetupGpio();
 	for (byte i = 0; i < friveCount; i++)
@@ -59,6 +51,15 @@ void setup()
 		pinMode(pins[i][0], OUTPUT); // Direction pin
 		pinMode(pins[i][1], OUTPUT); // Step pin
 	}
+
+	// Starting the serial device and returning file descriptor
+	int fd;
+	if ((fd = serialOpen ("/dev/ttyAMA0", 115200)) < 0)
+	{
+		fprintf (stderr, "Unable to open serial device: %s\n", strerror (errno)) ;
+		return 1;
+	}
+	return fd;
 }
 
 void stepFrive(byte frive)
@@ -116,7 +117,7 @@ void tick()
 			currentTick[1]=0;
 		}
 	}
-	delayMicroseconds(5);
+	delayMicroseconds(5); // Prevent the loop from going too fast and giving itself a bad time
 	// if (currentPeriod[2]>0)
 	// {
 	// 	currentTick[2]++;
@@ -144,14 +145,21 @@ void resetAll()
 	}
 }
 
-void readSerial()
+void readSerial(int fd)
 {
 	// Read the serial pins hooked up to the other pi to set the notes
+	if (int toRead = serialDataAvail(fd) > 0)
+	{
+		for (int i=0; i<toRead; i++)
+		{
+			std::cout << serialGetchar(fd) << std::endl;
+		}
+	}
 }
 
 int main()
 {
-	setup();
+	int fd = setup();
 	std::cout << "All set up!" << std::endl;
 	resetAll();
 	delay(2000);
@@ -165,6 +173,7 @@ int main()
 	while(1)
 	{
 		tick();
+		// readSerial(fd);
 	}
 
 	return 0;
