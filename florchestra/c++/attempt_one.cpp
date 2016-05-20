@@ -11,6 +11,8 @@
 // Avoid operations and conversions when possible
 // (Frive == floppy drive)
 
+// Temporary note:
+// Toggling the pin might be neccessary because if the program runs too fast the writing might be overlooked
 
 #include <stdint.h>
 #include <iostream>
@@ -65,7 +67,33 @@ void setup()
 
 void tick()
 {
-
+	if (currentPeriod[0]>0)
+	{
+		currentTick[0]++;
+		if (currentTick[0] >= currentPeriod[0])
+		{
+			stepFrive(0);
+			currentTick[0]=0;
+		}
+	}
+	if (currentPeriod[1]>0)
+	{
+		currentTick[1]++;
+		if (currentTick[1] >= currentPeriod[1])
+		{
+			stepFrive(1);
+			currentTick[1]=0;
+		}
+	}
+	if (currentPeriod[2]>0)
+	{
+		currentTick[2]++;
+		if (currentTick[2] >= currentPeriod[2])
+		{
+			stepFrive(2);
+			currentTick[2]=0;
+		}
+	}
 }
 
 void stepFrive(byte frive)
@@ -113,5 +141,8 @@ void readSerial()
 
 int main()
 {
+	setup();
+	resetAll();
+
 	return 0;
 }
