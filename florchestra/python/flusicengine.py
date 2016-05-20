@@ -93,16 +93,20 @@ def rest(length):
 def playSong(song, tempo):
 	noteLen = 60000.0/tempo
 
-	print "Note | Octave | Note value | Time duration\n"
+	print "Note | Octave | Value | Duration\n"
 
 	for note in song:
 		length = note[2] * noteLen
-		print note[0] + "\t" + str(note[1]) + "\t" + str(note[2]) + "\t%.2f" % n_length
 		if note[0] == "Zz":
+			print "REST"
 			rest(length)
 		else:
-			playNote(note[0], note[1], (length*7)/8.0)
-			rest(length/8.0)
+			n_length = (length*7)/8.0 # So that the note isn't dragged out for the whole count
+			r_length = length/8.0
+
+			print note[0] + "\t" + str(note[1]) + "\t" + str(note[2]) + "\t%.2f" % n_length
+			playNote(note[0], note[1], n_length)
+			rest(r_length)
 
 def main(argv):
 	if len(argv) != 2:
