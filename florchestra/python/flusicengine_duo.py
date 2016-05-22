@@ -142,6 +142,9 @@ def main(argv):
 	elif argv[1]=="rfactory_loop":
 		for _ in range(20):
 			playSong(song5, song5_tempo)
+	elif argv[1]=="cantina":
+		for _ in range(20):
+			playSong(cantina, cantina_tempo)
 	elif argv[1]=="cycle":
 		playSong(notecycle, 120)
 
