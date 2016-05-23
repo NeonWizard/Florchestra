@@ -14,7 +14,7 @@
 #include <wiringPi.h>
 #include <wiringSerial.h>
 
-#define STEPFRIVEF stepFrive_sliding // stepFrive_oscillating or stepFrive_sliding
+#define STEPFRIVEF stepFrive_oscillating // stepFrive_oscillating or stepFrive_sliding
 
 typedef uint8_t byte;
 
@@ -189,8 +189,8 @@ int main()
 	std::cout << "Everything reset." << std::endl;
 
 	std::cout << "Setting the note frequencies...\n";
-	currentPeriod[0] = 3500;
-	//currentPeriod[1] = 5000;
+	currentPeriod[0] = 2551;
+	currentPeriod[1] = 5102;
 	std::cout << "Done." << std::endl;
 
 
