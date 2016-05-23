@@ -1,4 +1,4 @@
-| Note | Frequency(hz) | Duration(uS) |
+| Note | Frequency(Hz) | Duration(µs) |
 |----|----|----|
 | C1 | 32.70  | 30581 |
 | C#1/Db1  | 34.65  | 28860 |
