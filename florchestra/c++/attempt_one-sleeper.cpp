@@ -13,6 +13,7 @@
 #include <iostream>
 #include <wiringPi.h>
 #include <wiringSerial.h>
+#include "notes.h"
 
 #define STEPFRIVEF stepFrive_oscillating // stepFrive_oscillating or stepFrive_sliding
 
@@ -195,9 +196,11 @@ int main()
 
 
 	// ~ Temporary note changer variables ~
-	// unsigned int counter = 0;
-	// unsigned int lll;
-	// unsigned ttt;
+	unsigned int counter = 0;
+	byte counter2 = 0;
+	unsigned int lll;
+	unsigned ttt;
+	unsigned tmp;
 
 	while(1)
 	{
@@ -205,15 +208,17 @@ int main()
 		// readSerial(fd);
 
 		// ~ Temporary note changer ~
-		// ttt = millis();
-		// counter += ttt-lll;
-		// lll = ttt;
-		// if (counter >= 1000)
-		// {
-		// 	counter = 0;
-		// 	currentPeriod[0] *= .95;
-		// 	//currentPeriod[1] -= 1000;
-		// }
+		ttt = millis();
+		counter += ttt-lll;
+		lll = ttt;
+		if (counter >= 1000)
+		{
+			counter = 0;
+			counter2++;
+			currentPeriod[0] = notes[counter2];
+			currentPeriod[1] = notes[counter2];
+			std::cout << +counter2 << std::endl;
+		}
 		
 	}
 
