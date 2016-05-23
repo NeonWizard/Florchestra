@@ -6,4 +6,7 @@ Information that needs to be sent:
 	Note
 	Octave
 	Which frive
-	Length? (maybe)
+
+Note - 12 possible - 4 bits
+Octave - Up to 3 - 2 bits
+Which frive - Up to 7 - 3 bits
