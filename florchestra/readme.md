@@ -1,3 +1,21 @@
+# Serial communication
+The pi that controls the notes to be played and sends them over the serial link will be called rpi1.
+
+The pi that makes the frives play the notes will be rpi2.
+
+rpi1 will need to send every note needed to rpi2 and rpi2 will need to handle them on time.
+
+Information that needs to be sent:
+
+* Note
+* Octave
+* Which frive
+
+* Note - 12 possible - 4 bits
+* Octave - Up to 3 - 2 bits
+* Which frive - Up to 7 - 3 bits
+
+# Notes
 | Note | Frequency(Hz) | Duration(µs) |
 |----|----|----|
 | C2 | 65.41  | 15288 |
@@ -41,3 +59,7 @@
 | D5 | 587.33  | 1703 |
 | D#5/Eb5  | 622.25  | 1607 |
 | E5 | 659.25  | 1517 |
+
+# Ideas
+Using PWM: https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=113916
+Using wiringPi: http://wiringpi.com/reference/core-functions/
