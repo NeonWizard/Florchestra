@@ -8,8 +8,8 @@ rpi1 will need to send every note needed to rpi2 and rpi2 will need to handle th
 **Information that needs to be sent:**
 
 * Note - 12 possible - 4 bits
-* Octave - Up to 3 - 2 bits
-* Which frive - Up to 7 - 3 bits
+* Octave - Up to 4 - 2 bits
+* Which frive - Up to 8 - 3 bits
 
 # Notes
 | Note | Frequency(Hz) | Duration(µs) |
