@@ -1,3 +1,8 @@
+// ======================
+//    Wesley Miravete
+//         2016
+// ======================
+
 // Notes:
 // Try to use as small of types as you can for optimization purposes
 // Avoid operations and conversions when possible
@@ -153,7 +158,7 @@ void resetAll()
 			delay(1);
 			digitalWrite(pins[i][1], 0);
 			delay(1);
-		}	
+		}
 
 		digitalWrite(pins[i][0], 1);
 		for (int pos=0; pos<MAX_POSITIONS[i]-10; pos++)
@@ -219,7 +224,6 @@ int main()
 			currentPeriod[1] = notes[counter2];
 			std::cout << +counter2 << std::endl;
 		}
-		
 	}
 
 	return 0;
