@@ -206,9 +206,11 @@ def main(argv):
 	FM = FriveManager()
 	FM.setupFrive((17, 18))
 	FM.setupFrive((13, 26))
+	FM.setupFrive((23, 24))
 
 	FM.friveTime[0][0] = FM.floppyDelays[1][0]
 	FM.friveTime[1][0] = FM.floppyDelays[2][0]
+	FM.friveTime[2][0] = FM.floppyDelays[3][0]
 
 #	s = Song(argv[1])
 
