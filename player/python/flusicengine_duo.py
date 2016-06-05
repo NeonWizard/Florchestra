@@ -53,8 +53,8 @@ pinMode(dirPin2, 1)
 #    Functionality
 # -------------------
 def resetMotor():
-	digitalWrite(dirPin, 0)
-	digitalWrite(dirPin2, 0)
+	digitalWrite(dirPin, 1)
+	digitalWrite(dirPin2, 1)
 	for _ in range(10):
 		digitalWrite(stepPin, 1)
 		digitalWrite(stepPin2, 1)
@@ -62,8 +62,8 @@ def resetMotor():
 		digitalWrite(stepPin2, 0)
 		delay(1)
 
-	digitalWrite(dirPin, 1)
-	digitalWrite(dirPin2, 1)
+	digitalWrite(dirPin, 0)
+	digitalWrite(dirPin2, 0)
 	for _ in range(5):
 		digitalWrite(stepPin, 1)
 		digitalWrite(stepPin2, 1)
@@ -148,5 +148,9 @@ def main(argv):
 	elif argv[1]=="cycle":
 		playSong(notecycle, 120)
 
+	print('Reseting motor')
+	resetMotor()
+
 if __name__ == "__main__":
 	main(sys.argv)
+
