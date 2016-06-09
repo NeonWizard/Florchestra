@@ -7,8 +7,7 @@ rpi1 will need to send every note needed to rpi2 and rpi2 will need to handle th
 
 **Information that needs to be sent:**
 
-* Note - 12 possible - 4 bits
-* Octave - Up to 4 - 2 bits
+* Note - 32 possible - 5 bits
 * Which frive - Up to 8 - 3 bits
 
 # Notes
