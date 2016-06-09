@@ -190,17 +190,17 @@ int main()
 {
 	std::cout << "Setting up..." << std::endl;
 	int fd = setup();
-	std::cout << "All set up!" << std::endl;
+	std::cout << "All set up!\n" << std::endl;
 
 	std::cout << "Resetting frives..." << std::endl;
 	resetAll();
-	std::cout << "Everything reset." << std::endl;
+	std::cout << "Everything reset.\n" << std::endl;
 
 	std::cout << "Starting serial thread loop..." << std::endl;
 	std::thread sl(serialLoop, fd, std::ref(currentPeriod));
-	std::cout << "Serial loop running." << std::endl;
+	std::cout << "Serial loop running.\n" << std::endl;
 
-	std::cout << "\nReady to begin." << std::endl;
+	std::cout << "Ready to begin." << std::endl;
 
 	while(1)
 	{
