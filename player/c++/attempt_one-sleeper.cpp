@@ -10,15 +10,15 @@
 // Toggling the pin is neccessary because the writing from 0 to 1 to 0 again sometimes overlooks the 1, especially on a crappy frive.
 
 // Todo:
-// Add duration to notes
 // Serial communication
-// Add third frive
 
 #include <stdint.h>
+#include <cstdio>
 #include <iostream>
 #include <wiringPi.h>
 #include <wiringSerial.h>
 #include "notes.h"
+#include <thread>
 
 #define STEPFRIVEF stepFrive_oscillating // stepFrive_oscillating or stepFrive_sliding
 
@@ -46,9 +46,8 @@ byte currentPositions[] = {0, 0};
 byte currentDirection[] = {0, 0};
 bool currentVoltage[]   = {0, 0};
 
-unsigned int currentPeriod[2]   = {0, 0}; // Current period is how long until another step
-// unsigned int currentDuration[2] = {0, 0}; // Current duration is how long the note is held
-unsigned int currentTick[2]     = {0, 0}; // Counts how long has passed since the frive has been stepped
+unsigned int currentPeriod[2] = {0, 0}; // Current period is how long until another step
+unsigned int currentTick[2]   = {0, 0}; // Counts how long has passed since the frive has been stepped
 
 // =============
 //   Functions
@@ -64,11 +63,11 @@ int setup()
 
 	// Starting the serial device and returning file descriptor
 	int fd;
-	// if ((fd = serialOpen ("/dev/ttyAMA0", 115200)) < 0)
-	// {
-	// 	fprintf (stderr, "Unable to open serial device: %s\n", strerror (errno)) ;
-	// 	return 1;
-	// }
+	if ((fd = serialOpen ("/dev/ttyAMA0", 115200)) < 0)
+	{
+		std::cout << "Could not open serial device." << std::endl;
+		return 1;
+	}
 	return fd;
 }
 
@@ -172,15 +171,15 @@ void resetAll()
 	}
 }
 
-void readSerial(int fd)
+void serialLoop(int fd, unsigned int currentPeriod[])
 {
-	// Read the serial pins hooked up to the other pi to set the notes
-	if (int toRead = serialDataAvail(fd) > 0)
+	char data;
+	while(1)
 	{
-		for (int i=0; i<toRead; i++)
-		{
-			std::cout << serialGetchar(fd) << std::endl;
-		}
+		// Read the serial pins hooked up to the other pi to set the notes
+		if (data=serialGetchar(fd)==-1) continue;
+
+		std::cout << "Note: " << char(data) << std::endl;
 	}
 }
 
@@ -207,23 +206,24 @@ int main()
 	unsigned ttt;
 	unsigned tmp;
 
+	std::thread sl(serialLoop, fd, std::ref(currentPeriod));
+
 	while(1)
 	{
 		tick();
-		// readSerial(fd);
 
 		// ~ Temporary note changer ~
-		ttt = millis();
-		counter += ttt-lll;
-		lll = ttt;
-		if (counter >= 1000)
-		{
-			counter = 0;
-			counter2++;
-			currentPeriod[0] = notes[counter2];
-			currentPeriod[1] = notes[counter2];
-			std::cout << +counter2 << std::endl;
-		}
+		// ttt = millis();
+		// counter += ttt-lll;
+		// lll = ttt;
+		// if (counter >= 1000)
+		// {
+		// 	counter = 0;
+		// 	currentPeriod[0] = notes[counter2];
+		// 	currentPeriod[1] = notes[counter2];
+		// 	std::cout << +counter2 << " - " << notes[counter2] << std::endl;
+		// 	counter2++;
+		// }
 	}
 
 	return 0;
