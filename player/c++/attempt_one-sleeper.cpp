@@ -188,45 +188,23 @@ void serialLoop(int fd, unsigned int currentPeriod[])
 
 int main()
 {
+	std::cout << "Setting up..." << std::endl;
 	int fd = setup();
 	std::cout << "All set up!" << std::endl;
 
 	std::cout << "Resetting frives..." << std::endl;
 	resetAll();
-	delay(1000);
 	std::cout << "Everything reset." << std::endl;
 
-	std::cout << "Setting the note frequencies...\n";
-	//currentPeriod[0] = 2551;
-	//currentPeriod[1] = 5102;
-	std::cout << "Done." << std::endl;
-
-
-	// ~ Temporary note changer variables ~
-	unsigned int counter = 0;
-	byte counter2 = 0;
-	unsigned int lll;
-	unsigned ttt;
-	unsigned tmp;
-
+	std::cout << "Starting serial thread loop..." << std::endl;
 	std::thread sl(serialLoop, fd, std::ref(currentPeriod));
+	std::cout << "Serial loop running." << std::endl;
+
+	std::cout << "\nReady to begin." << std::endl;
 
 	while(1)
 	{
 		tick();
-
-		// ~ Temporary note changer ~
-		// ttt = millis();
-		// counter += ttt-lll;
-		// lll = ttt;
-		// if (counter >= 1000)
-		// {
-		// 	counter = 0;
-		// 	currentPeriod[0] = notes[counter2];
-		// 	currentPeriod[1] = notes[counter2];
-		// 	std::cout << +counter2 << " - " << notes[counter2] << std::endl;
-		// 	counter2++;
-		// }
 	}
 
 	return 0;
