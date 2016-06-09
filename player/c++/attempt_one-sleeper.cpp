@@ -173,13 +173,16 @@ void resetAll()
 
 void serialLoop(int fd, unsigned int currentPeriod[])
 {
-	char data;
+	signed char data;
 	while(1)
 	{
 		// Read the serial pins hooked up to the other pi to set the notes
-		if (data=serialGetchar(fd)==-1) continue;
+		data = serialGetchar(fd);
+		if (data==-1) continue; // timeout catcher
 
-		std::cout << "Note: " << char(data) << std::endl;
+		currentPeriod[data & 0b00000111] = notes[(data >> 3) & 0b00011111];
+		//std::cout << "Note: " << +byte((data >> 3) & 0b00011111) << std::endl;
+		//std::cout << "Frive: " << +byte(data & 0b00000111) << std::endl;
 	}
 }
 
@@ -194,8 +197,8 @@ int main()
 	std::cout << "Everything reset." << std::endl;
 
 	std::cout << "Setting the note frequencies...\n";
-	currentPeriod[0] = 2551;
-	currentPeriod[1] = 5102;
+	//currentPeriod[0] = 2551;
+	//currentPeriod[1] = 5102;
 	std::cout << "Done." << std::endl;
 
 

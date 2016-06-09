@@ -14,7 +14,7 @@ rpi1 will need to send every note needed to rpi2 and rpi2 will need to handle th
 # Notes
 | Note | Frequency(Hz) | Duration(µs) |
 |----|----|----|
-| A#2/Bb2  | 116.54  | 8581 |
+| Zz | 0 | 0 |
 | B2 | 123.47  | 8099 |
 | C3 | 130.81  | 7645 |
 | C#3/Db3  | 138.59  | 7216 |
