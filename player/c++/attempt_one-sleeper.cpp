@@ -174,13 +174,19 @@ void resetAll()
 void serialLoop(int fd, unsigned int currentPeriod[])
 {
 	signed char data;
+	unsigned byte note, frive;
 	while(1)
 	{
 		// Read the serial pins hooked up to the other pi to set the notes
 		data = serialGetchar(fd);
 		if (data==-1) continue; // timeout catcher
 
-		currentPeriod[data & 0b00000111] = notes[(data >> 3) & 0b00011111];
+		// Get bits out of received char
+		note = (data >> 3) & 0b00011111;
+		frive = data & 0b00000111;
+		if (note < 32 && frive < 8) // Make sure recieved values are in range
+			currentPeriod[frive] = notes[note];
+
 		//std::cout << "Note: " << +byte((data >> 3) & 0b00011111) << std::endl;
 		//std::cout << "Frive: " << +byte(data & 0b00000111) << std::endl;
 	}
