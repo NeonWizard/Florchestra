@@ -174,7 +174,8 @@ void resetAll()
 void serialLoop(int fd, unsigned int currentPeriod[])
 {
 	signed char data;
-	unsigned byte note, frive;
+	byte note;
+	byte frive;
 	while(1)
 	{
 		// Read the serial pins hooked up to the other pi to set the notes
