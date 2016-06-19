@@ -199,7 +199,7 @@ void serialLoop(int fd, unsigned int currentPeriod[])
 
 void onExit(int s)
 {
-	std::cout << "Resetting pins to 0..." << std::endl;
+	std::cout << "Resetting pins to 0... ";
 	for (byte i = 0; i < friveCount; i++)
 	{
 		digitalWrite(pins[i][0], 0);
@@ -212,21 +212,25 @@ void onExit(int s)
 
 int main()
 {
-	std::cout << "Binding exit cleanup function..." << std::endl;
+	std::cout << "Binding exit cleanup function... " << std::flush;
 	signal(SIGINT, onExit);
-	std::cout << "Exit cleanup function bound.\n" << std::endl;
+	std::cout << "Done." << std::endl;
+	delay(500);
 
-	std::cout << "Setting up..." << std::endl;
+	std::cout << "Setting up... " << std::flush;
 	int fd = setup();
-	std::cout << "All set up!\n" << std::endl;
+	std::cout << "Done." << std::endl;
+	delay(500);
 
-	std::cout << "Resetting frives..." << std::endl;
+	std::cout << "Resetting frives... " << std::flush;
 	resetAll();
-	std::cout << "Everything reset.\n" << std::endl;
+	std::cout << "Done." << std::endl;
+	delay(500);
 
-	std::cout << "Starting serial thread loop..." << std::endl;
+	std::cout << "Starting serial thread loop... " << std::flush;
 	std::thread sl(serialLoop, fd, std::ref(currentPeriod));
-	std::cout << "Serial loop running.\n" << std::endl;
+	std::cout << "Done." << std::endl;
+	delay(500);
 
 	std::cout << "Ready to begin." << std::endl;
 
