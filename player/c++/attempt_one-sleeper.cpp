@@ -10,7 +10,6 @@
 // Toggling the pin is neccessary because the writing from 0 to 1 to 0 again sometimes overlooks the 1, especially on a crappy frive.
 
 // Todo:
-// Serial communication
 
 #include <stdint.h>
 #include <cstdio>
@@ -19,6 +18,7 @@
 #include <wiringSerial.h>
 #include "notes.h"
 #include <thread>
+#include <signal.h>
 
 #define STEPFRIVEF stepFrive_oscillating // stepFrive_oscillating or stepFrive_sliding
 
@@ -31,11 +31,11 @@ typedef uint8_t byte;
 //  Individual frive information
 // ------------------------------
 // The array positions are numbered based on position in the Frive array
-byte pins[3][2] = {
-	// Dir, step
-	{17, 18},
-	{13, 26},
-	{23, 24}
+byte pins[3][3] = {
+	// Dir, step, led
+	{17, 18, 19},
+	{13, 26, 6},
+	{23, 24, 25}
 };
 byte friveCount = 3;
 
@@ -60,6 +60,7 @@ int setup()
 	{
 		pinMode(pins[i][0], OUTPUT); // Direction pin
 		pinMode(pins[i][1], OUTPUT); // Step pin
+		pinMode(pins[i][2], OUTPUT); // LED pin
 	}
 
 	// Starting the serial device and returning file descriptor
@@ -189,13 +190,32 @@ void serialLoop(int fd, unsigned int currentPeriod[])
 		if (note < 32 && frive < 8) // Make sure recieved values are in range
 			currentPeriod[frive] = notes[note];
 
+		digitalWrite(pins[frive][2], int(note!=0));
+
 		//std::cout << "Note: " << +byte((data >> 3) & 0b00011111) << std::endl;
 		//std::cout << "Frive: " << +byte(data & 0b00000111) << std::endl;
 	}
 }
 
+void onExit(int s)
+{
+	std::cout << "Resetting pins to 0..." << std::endl;
+	for (byte i = 0; i < friveCount; i++)
+	{
+		digitalWrite(pins[i][0], 0);
+		digitalWrite(pins[i][1], 0);
+		digitalWrite(pins[i][2], 0);
+	}
+	std::cout << "Done." << std::endl;
+	exit(1);
+}
+
 int main()
 {
+	std::cout << "Binding exit cleanup function..." << std::endl;
+	signal(SIGINT, onExit);
+	std::cout << "Exit cleanup function bound.\n" << std::endl;
+
 	std::cout << "Setting up..." << std::endl;
 	int fd = setup();
 	std::cout << "All set up!\n" << std::endl;
