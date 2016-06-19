@@ -7,6 +7,7 @@ import serialcomm
 # out = mido.open_output("Microsoft MIDI Mapper")
 
 currentNote = 0
+onlyfrive = 0
 
 def handleRaw(msg):
 	global currentNote
@@ -15,10 +16,10 @@ def handleRaw(msg):
 	if note <= 0 or note > 31: return
 
 	if state:
-		serialcomm.sendNote(note, 0)
+		serialcomm.sendNote(note, onlyfrive)
 		currentNote = note
 	elif currentNote == note:
-		serialcomm.sendNote(0, 0)
+		serialcomm.sendNote(0, onlyfrive)
 
 		
 inp = mido.open_input(mido.get_input_names()[1])
