@@ -31,23 +31,24 @@ typedef uint8_t byte;
 //  Individual frive information
 // ------------------------------
 // The array positions are numbered based on position in the Frive array
-byte pins[2][2] = {
+byte pins[3][2] = {
 	// Dir, step
 	{17, 18},
-	{13, 26}
+	{13, 26},
+	{23, 24}
 };
-byte friveCount = 2;
+byte friveCount = 3;
 
 // 3.5" frives have 80 tracks and 5.25" have 50
 // Subtract 8 to add a bit of padding
 // Double it because of toggling
-byte MAX_POSITIONS[]    = {144, 144};
-byte currentPositions[] = {0, 0};
-byte currentDirection[] = {0, 0};
-bool currentVoltage[]   = {0, 0};
+byte MAX_POSITIONS[]    = {144, 144, 144};
+byte currentPositions[] = {0, 0, 0};
+byte currentDirection[] = {0, 0, 0};
+bool currentVoltage[]   = {0, 0, 0};
 
-unsigned int currentPeriod[2] = {0, 0}; // Current period is how long until another step
-unsigned int currentTick[2]   = {0, 0}; // Counts how long has passed since the frive has been stepped
+unsigned int currentPeriod[3] = {0, 0, 0}; // Current period is how long until another step
+unsigned int currentTick[3]   = {0, 0, 0}; // Counts how long has passed since the frive has been stepped
 
 // =============
 //   Functions
