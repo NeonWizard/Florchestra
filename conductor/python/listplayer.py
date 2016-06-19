@@ -22,9 +22,9 @@ def millis():
 
 def playNote(note, frive, duration):
 	duration = duration/1000.0
-	sendInfo(note, frive)
+	sendNote(note, frive)
 	sleep(duration*7/8.0)
-	sendInfo(0, frive)
+	sendNote(0, frive)
 	sleep(duration/8.0)
 
 try:
@@ -34,10 +34,10 @@ try:
 	# 	else:
 	# 		ind = ((findIndex(note[0])+2)%13)+(note[1]-2)*12
 	# 	print note[0]
-	# 	sendInfo(ind, 1)
+	# 	sendNote(ind, 1)
 	# 	delay = 60.0/song4_tempo*note[2]
 	# 	sleep(delay*7/8.0)
-	# 	sendInfo(0, 1)
+	# 	sendNote(0, 1)
 	# 	sleep(delay/8.0)
 	
 	playing = True
@@ -72,5 +72,5 @@ try:
 
 except:
  	# Reset on early termination/crash
- 	sendInfo(0, 0)
- 	sendInfo(0, 1)
+ 	sendNote(0, 0)
+ 	sendNote(0, 1)
