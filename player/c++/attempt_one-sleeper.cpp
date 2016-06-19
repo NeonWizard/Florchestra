@@ -132,16 +132,16 @@ void tick()
 			currentTick[1]=0;
 		}
 	}
+	if (currentPeriod[2]>0)
+	{
+		currentTick[2] += delta;
+		if (currentTick[2] >= currentPeriod[2])
+		{
+			STEPFRIVEF(2);
+			currentTick[2]=0;
+		}
+	}	
 	delayMicroseconds(5); // Prevent the loop from going too fast and giving itself a bad time
-	// if (currentPeriod[2]>0)
-	// {
-	// 	currentTick[2]++;
-	// 	if (currentTick[2] >= currentPeriod[2])
-	// 	{
-	// 		stepFrive(2);
-	// 		currentTick[2]=0;
-	// 	}
-	// }
 }
 
 void resetAll()
