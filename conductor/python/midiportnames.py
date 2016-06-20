@@ -1,2 +1,2 @@
-ins = ["USB2.0-MIDI"]
+ins = ["USB2.0-MIDI", "USB2.0-MIDI MIDI 1"]
 outs = ["MIDIOUT2 (USB2.0-MIDI)"]
