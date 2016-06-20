@@ -14,11 +14,13 @@ def handleRaw(msg):
 
 	for i in range(len(frives)):
 		frive = frives[i]
+		if frive != 0: continue # If already playing a note
+
 		if state:
-			serialcomm.sendNote(note, onlyfrive)
+			serialcomm.sendNote(note, frive)
 			currentNote = note
 		elif currentNote == note:
-			serialcomm.sendNote(0, onlyfrive)
+			serialcomm.sendNote(0, frive)
 
 inPort = list(set(mido.get_input_names())&set(midiportnames.ins))[0]
 inp = mido.open_input(inPort)
