@@ -4,28 +4,40 @@ mido.set_backend("mido.backends.pygame")
 import serialcomm
 import midiportnames
 
-frives = [0, 0, 0]
+class Handler:
+	def __init__(self):
+		self.frives = [0, 0, 0]
 
-def handleRaw(msg):
-	global frives
-	state = msg.type=="note_on" and msg.velocity > 0
-	note = msg.note-46
-	if note <= 0 or note > 31: return
+		inPort = list(set(mido.get_input_names())&set(midiportnames.ins))[0]
+		self.inp = mido.open_input(inPort)
 
-	if not state:
-		frive = frives.index(note)
-		serialcomm.sendNote(0, frive)
-		frives[frive] = 0
-	else:
-		for i in range(len(frives)):
-			if frives[i] != 0:
-				serialcomm.sendNote(note, i)
-				frives[i] = note
+	def listen(self):
+		print("Now listening for MIDI signals.")
+		for message in self.inp:
+			self.parseNote(message)
 
-inPort = list(set(mido.get_input_names())&set(midiportnames.ins))[0]
-inp = mido.open_input(inPort)
+	def parseNote(self, msg):
+		note = msg.note - 46
+		if note < 0 or note > 31: return
+		if msg.type == "note_on" and msg.velocity > 0:
+			self.playNote(note)
+		else:
+			self.stopNote(note)
 
-print "Ready to begin."
-for message in inp:
-	handleRaw(message)
-inp.close()
+	def playNote(self, note):
+		for i in range(len(self.frives)):
+			if self.frives[i]: continue # If this frive is already playing a note
+			self.frives[i] = note
+			serialcomm.sendNote(note, i)
+			return
+
+	def stopNote(self, note):
+		for i in range(len(self.frives)):
+			if self.frives[i] == note:
+				self.frives[i] = 0
+				serialcomm.sendNote(0, i)
+				# Putting a return statement here could reduce lag but also might help clear out bugged notes
+
+if __name__ == "__main__":
+	h = Handler()
+	h.listen()
