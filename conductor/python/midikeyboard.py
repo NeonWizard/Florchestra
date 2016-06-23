@@ -16,6 +16,11 @@ class Handler:
 		for message in self.inp:
 			self.parseNote(message)
 
+	def sortNotes(self):
+		self.frives = sorted(self.frives)
+		for i in range(len(self.frives)):
+			serialcomm.sendNote(self.frives[i], i)
+
 	def parseNote(self, msg):
 		note = msg.note - 46
 		if note < 0 or note > 31: return
@@ -27,8 +32,9 @@ class Handler:
 	def playNote(self, note):
 		for i in range(len(self.frives)):
 			if self.frives[i]: continue # If this frive is already playing a note
-			self.frives[i] = note
-			serialcomm.sendNote(note, i)
+
+			self.frives[i] = note # Document the note playing
+			self.sortAndSend()
 			return
 
 	def stopNote(self, note):
