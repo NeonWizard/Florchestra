@@ -20,7 +20,7 @@
 #include <thread>
 #include <signal.h>
 
-#define STEPFRIVEF stepFrive_oscillating // stepFrive_oscillating or stepFrive_sliding
+// #define STEPFRIVEF stepFrive_sliding // stepFrive_oscillating or stepFrive_sliding
 
 typedef uint8_t byte;
 
@@ -49,6 +49,8 @@ bool currentVoltage[]   = {0, 0, 0};
 
 unsigned int currentPeriod[3] = {0, 0, 0}; // Current period is how long until another step
 unsigned int currentTick[3]   = {0, 0, 0}; // Counts how long has passed since the frive has been stepped
+
+static bool stepmethod;
 
 // =============
 //   Functions
@@ -107,6 +109,12 @@ void stepFrive_sliding(byte frive)
 	{
 		currentPositions[frive] += 1;
 	}
+}
+
+void STEPFRIVEF(byte frive)
+{
+	// Just a standin function in case I ever want to go back to the preprocessor definition
+	if (stepmethod) stepFrive_oscillating(frive); else stepFrive_sliding(frive);
 }
 
 void tick()
@@ -210,27 +218,34 @@ void onExit(int s)
 	exit(1);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+	if (argc != 2) // First argument is the program name, never forgetti
+	{
+		std::cout << "Invalid number of arguments." << std::endl;
+		return 1;
+	}
+	stepmethod = argv[1][0]-48; // Get first char of input (only one char should be the input) then subtract 48 from the ascii number
+
 	std::cout << "Binding exit cleanup function... " << std::flush;
 	signal(SIGINT, onExit);
-	std::cout << "Done." << std::endl;
 	delay(500);
+	std::cout << "Done." << std::endl;
 
 	std::cout << "Setting up... " << std::flush;
 	int fd = setup();
-	std::cout << "Done." << std::endl;
 	delay(500);
+	std::cout << "Done." << std::endl;
 
 	std::cout << "Resetting frives... " << std::flush;
 	resetAll();
-	std::cout << "Done." << std::endl;
 	delay(500);
+	std::cout << "Done." << std::endl;
 
 	std::cout << "Starting serial thread loop... " << std::flush;
 	std::thread sl(serialLoop, fd, std::ref(currentPeriod));
-	std::cout << "Done." << std::endl;
 	delay(500);
+	std::cout << "Done." << std::endl;
 
 	std::cout << "Ready to begin." << std::endl;
 
