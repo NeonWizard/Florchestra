@@ -16,7 +16,7 @@ class Handler:
 		for message in self.inp:
 			self.parseNote(message)
 
-	def sortNotes(self):
+	def sortAndSend(self):
 		self.frives = sorted(self.frives)
 		for i in range(len(self.frives)):
 			serialcomm.sendNote(self.frives[i], i)
