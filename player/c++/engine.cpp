@@ -162,14 +162,14 @@ void tick()
 	delayMicroseconds(5); // Prevent the loop from going too fast and giving itself a bad time
 }
 
-void resetAll()
+void resetAll(bool method)
 {
 	for (byte i = 0; i < friveCount; i++)
 	{
 		currentPeriod[i] = 0; // Stop playing any notes
 
 		digitalWrite(pins[i][0], 0);
-		for (int pos=0; pos<MAX_POSITIONS[i]; pos++)
+		for (int pos=0; pos<MAX_POSITIONS[i]/2; pos++) // MAX_POSITIONS[i] is divided by two because this isn't toggling
 		{
 			digitalWrite(pins[i][1], 1);
 			delay(1);
@@ -178,7 +178,7 @@ void resetAll()
 		}
 
 		digitalWrite(pins[i][0], 1);
-		for (int pos=0; pos<MAX_POSITIONS[i]-10; pos++)
+		for (int pos=0; pos<(method ? MAX_POSITIONS[i]/4 : MAX_POSITIONS[i]/2); pos++) // Stop halfway if using the oscillating method
 		{
 			digitalWrite(pins[i][1], 1);
 			delay(1);
@@ -246,7 +246,7 @@ int main(int argc, char *argv[])
 	std::cout << "Done." << std::endl;
 
 	std::cout << "Resetting frives... " << std::flush;
-	resetAll();
+	resetAll(stepmethod);
 	delay(500);
 	std::cout << "Done." << std::endl;
 
