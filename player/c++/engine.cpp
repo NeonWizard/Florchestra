@@ -38,12 +38,12 @@ byte pins[4][3] = {
 	{23, 24, 25},
 	{20, 21, 22}
 };
+// Keep track of amount of frives for loop purposes
 byte friveCount = 4;
 
 // 3.5" frives have 80 tracks and 5.25" have 50
 // Subtract 8 to add a bit of padding
-// Double it because of toggling
-byte MAX_POSITIONS[]    = {144, 144, 144, 144};
+byte MAX_POSITIONS[]    = {72, 72, 72, 72};
 byte currentPositions[] = {0, 0, 0, 0};
 byte currentDirection[] = {0, 0, 0, 0};
 bool currentVoltage[]   = {0, 0, 0, 0};
@@ -51,6 +51,7 @@ bool currentVoltage[]   = {0, 0, 0, 0};
 unsigned int currentPeriod[] = {0, 0, 0, 0}; // Current period is how long until another step
 unsigned int currentTick[]   = {0, 0, 0, 0}; // Counts how long has passed since the frive has been stepped
 
+// Initialize the stepmethod variable (0 = Sliding, 1 = Oscillating)
 static bool stepmethod;
 
 // =============
@@ -68,7 +69,7 @@ int setup()
 
 	// Starting the serial device and returning file descriptor
 	int fd;
-	if ((fd = serialOpen ("/dev/ttyAMA0", 115200)) < 0)
+	if ((fd = serialOpen("/dev/ttyAMA0", 115200)) < 0)
 	{
 		std::cout << "Could not open serial device." << std::endl;
 		return 1;
@@ -76,17 +77,24 @@ int setup()
 	return fd;
 }
 
+// NOTE: I've noticed that the sliding method seems to produce notes that are an octave higher than they should be.
+// This is probably due to the fact that an octave is just double/half the frequency of the previous/next octave, respectably, which
+// could mean that for whatever reason the sliding method produces notes of double frequency
+
 void stepFrive_oscillating(byte frive)
 {
+	// Switch the direction every time the step pin is at a high voltage
 	currentDirection[frive] = currentVoltage[frive] ? !currentDirection[frive] : currentDirection[frive];
 	digitalWrite(pins[frive][0], currentDirection[frive]);
 
+	// Toggle the step pin
 	currentVoltage[frive] = !currentVoltage[frive];
 	digitalWrite(pins[frive][1], currentVoltage[frive]);
 }
 
 void stepFrive_sliding(byte frive)
 {
+	// Switch directions when reaching either end
 	if (currentPositions[frive] >= MAX_POSITIONS[frive])
 	{
 		currentDirection[frive] = 1;
@@ -97,16 +105,22 @@ void stepFrive_sliding(byte frive)
 		currentDirection[frive] = 0;
 		digitalWrite(pins[frive][0], 0);
 	}
+
+	// Toggle the step pin
 	currentVoltage[frive] = !currentVoltage[frive];
 	digitalWrite(pins[frive][1], currentVoltage[frive]);
 
-	if (currentDirection[frive] == 1)
+	// Keep track of current motor arm position
+	if (currentVoltage[frive])
 	{
-		currentPositions[frive] -= 1;
-	}
-	else
-	{
-		currentPositions[frive] += 1;
+		if (currentDirection[frive] == 1)
+		{
+			currentPositions[frive] -= 1;
+		}
+		else
+		{
+			currentPositions[frive] += 1;
+		}
 	}
 }
 
@@ -118,11 +132,15 @@ void STEPFRIVEF(byte frive)
 
 void tick()
 {
+	// Get delta time
 	static unsigned int time = 0;
 	static unsigned int lasttime = 0;
 	time = micros();
 	unsigned int delta = time-lasttime;
 	lasttime = time;
+
+	// Go through each frive and check if it's time to call a stepping function
+	// (I don't use a for loop to iterate over each one, because I'm afraid it'll slow it down)
 	if (currentPeriod[0]>0)
 	{
 		currentTick[0] += delta;
@@ -169,7 +187,7 @@ void resetAll(bool method)
 		currentPeriod[i] = 0; // Stop playing any notes
 
 		digitalWrite(pins[i][0], 0);
-		for (int pos=0; pos<MAX_POSITIONS[i]/2; pos++) // MAX_POSITIONS[i] is divided by two because this isn't toggling
+		for (int pos=0; pos<MAX_POSITIONS[i]; pos++) // MAX_POSITIONS[i] is divided by two because this isn't toggling
 		{
 			digitalWrite(pins[i][1], 1);
 			delay(1);
@@ -178,7 +196,7 @@ void resetAll(bool method)
 		}
 
 		digitalWrite(pins[i][0], 1);
-		for (int pos=0; pos<(method ? MAX_POSITIONS[i]/4 : MAX_POSITIONS[i]/2); pos++) // Stop halfway if using the oscillating method
+		for (int pos=0; pos<(method ? MAX_POSITIONS[i]/2 : MAX_POSITIONS[i]); pos++) // Stop halfway if using the oscillating method
 		{
 			digitalWrite(pins[i][1], 1);
 			delay(1);
