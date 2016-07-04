@@ -31,12 +31,19 @@ typedef uint8_t byte;
 //  Individual frive information
 // ------------------------------
 // The array positions are numbered based on position in the Frive array
+//byte pins[4][3] = {
+	// Dir, step, led
+//	{17, 18, 19},
+//	{13, 26, 6},
+//	{23, 24, 25},
+//	{20, 21, 22}
+//};
 byte pins[4][3] = {
 	// Dir, step, led
-	{17, 18, 19},
-	{13, 26, 6},
+	{20, 21, 22},
 	{23, 24, 25},
-	{20, 21, 22}
+	{13, 26, 6},
+	{17, 18, 19},
 };
 // Keep track of amount of frives for loop purposes
 byte friveCount = 4;
