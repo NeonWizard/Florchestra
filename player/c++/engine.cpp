@@ -252,7 +252,6 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 	stepmethod = argv[1][0]-48; // Get first char of input (only one char should be the input) then subtract 48 from the ascii number
-	stepmethod = 0; // For now just always reset it fully because it seems to make a louder noise when oscillating
 
 	std::cout << "Binding exit cleanup function... " << std::flush;
 	signal(SIGINT, onExit);
@@ -265,7 +264,7 @@ int main(int argc, char *argv[])
 	std::cout << "Done." << std::endl;
 
 	std::cout << "Resetting frives... " << std::flush;
-	resetAll(stepmethod);
+	resetAll(0); // For now just always reset it fully because it seems to make a louder noise when oscillating
 	delay(500);
 	std::cout << "Done." << std::endl;
 
