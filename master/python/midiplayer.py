@@ -59,11 +59,11 @@ print "Getting track list..."
 # Mayhem - The Sound
 #tracklist = [-1, 0, 2, 4]
 #tracklist = [-1, 2, 4, 0]
-octavemode = 2
+#octavemode = 2
 
 # Eurythmics - Sweet dreams
 #tracklist = [-1, 2, 6, 5]
-octavemod = 2
+#octavemod = 2
 
 # TLT - FNAF
 tracklist = [0, 3, 4, 6]
