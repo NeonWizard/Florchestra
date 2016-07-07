@@ -26,7 +26,7 @@ def handleRaw(msg, tracklist):
 	# Determine if it's a NOTE_ON or NOTE_OFF
 	state = msg.type=="note_on" and msg.velocity > 0
 	# Convert the message to a floppy note
-	note = msg.note-46+24
+	note = msg.note-46+octavemod*12
 	if note > 31:
 		note = 20+((note-32)%12)
 	if note <= 0:
@@ -59,9 +59,15 @@ print "Getting track list..."
 # Mayhem - The Sound
 #tracklist = [-1, 0, 2, 4]
 #tracklist = [-1, 2, 4, 0]
+octavemode = 2
 
 # Eurythmics - Sweet dreams
-tracklist = [-1, 2, 6, 5]
+#tracklist = [-1, 2, 6, 5]
+octavemod = 2
+
+# TLT - FNAF
+tracklist = [0, 3, 4, 6]
+octavemod = 2
 
 print tracklist
 print "Ready to begin."
