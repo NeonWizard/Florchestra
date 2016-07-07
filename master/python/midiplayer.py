@@ -62,7 +62,7 @@ print "Getting track list..."
 #octavemode = 2
 
 # Eurythmics - Sweet dreams
-#tracklist = [-1, 2, 6, 5]
+#tracklist = [-1, 6, 2, 5]
 #octavemod = 2
 
 # TLT - FNAF
