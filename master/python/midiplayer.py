@@ -55,8 +55,14 @@ song ="../../midis/"+sys.argv[1]+".mid"
 
 print "Getting track list..."
 #tracklist = getChannels(song)
-tracklist = [-1, 0, 2, 4]
-tracklist = [-1, 2, 4, 0]
+
+# Mayhem - The Sound
+#tracklist = [-1, 0, 2, 4]
+#tracklist = [-1, 2, 4, 0]
+
+# Eurythmics - Sweet dreams
+tracklist = [-1, 2, 6, 5]
+
 print tracklist
 print "Ready to begin."
 for message in mido.MidiFile(song).play():
