@@ -69,6 +69,10 @@ print "Getting track list..."
 tracklist = [0, 3, 4, 6]
 octavemod = 2
 
+# Glaze - Beyond
+#tracklist = [-1, 3, 4, 2]
+#octavemod = 3
+
 print tracklist
 print "Ready to begin."
 for message in mido.MidiFile(song).play():
