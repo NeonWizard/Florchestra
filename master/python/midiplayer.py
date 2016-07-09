@@ -66,12 +66,16 @@ print "Getting track list..."
 #octavemod = 2
 
 # TLT - FNAF
-tracklist = [0, 3, 4, 6]
-octavemod = 2
+#tracklist = [0, 3, 4, 6]
+#octavemod = 2
 
 # Glaze - Beyond
 #tracklist = [-1, 3, 4, 2]
 #octavemod = 3
+
+# Laroux - Bulletproof
+tracklist = [-1, 3, 1, 2]
+octavemod = 3
 
 print tracklist
 print "Ready to begin."
