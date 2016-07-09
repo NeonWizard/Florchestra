@@ -9,8 +9,6 @@
 // (Frive == floppy drive)
 // Toggling the pin is neccessary because the writing from 0 to 1 to 0 again sometimes overlooks the 1, especially on a crappy frive.
 
-// Todo:
-
 #include <stdint.h>
 #include <cstdio>
 #include <iostream>
@@ -30,14 +28,6 @@ typedef uint8_t byte;
 // ------------------------------
 //  Individual frive information
 // ------------------------------
-// The array positions are numbered based on position in the Frive array
-//byte pins[4][3] = {
-	// Dir, step, led
-//	{17, 18, 19},
-//	{13, 26, 6},
-//	{23, 24, 25},
-//	{20, 21, 22}
-//};
 byte pins[4][3] = {
 	// Dir, step, led
 	{20, 21, 22},
@@ -50,7 +40,7 @@ byte friveCount = 4;
 
 // 3.5" frives have 80 tracks and 5.25" have 50
 // Subtract 8 to add a bit of padding
-byte MAX_POSITIONS[]    = {72, 72, 72, 72};
+byte MAX_POSITIONS[]    = {72, 72, 72, 72}; // Constants
 byte currentPositions[] = {0, 0, 0, 0};
 byte currentDirection[] = {0, 0, 0, 0};
 bool currentVoltage[]   = {0, 0, 0, 0};
@@ -232,9 +222,6 @@ void serialLoop(int fd, unsigned int currentPeriod[])
 			currentPeriod[frive] = notes[note];
 
 		digitalWrite(pins[frive][2], int(note!=0));
-
-		//std::cout << "Note: " << +byte((data >> 3) & 0b00011111) << std::endl;
-		//std::cout << "Frive: " << +byte(data & 0b00000111) << std::endl;
 	}
 }
 
