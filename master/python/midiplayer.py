@@ -59,7 +59,7 @@ print "Getting track list..."
 # Mayhem - The Sound
 #tracklist = [-1, 0, 2, 4]
 #tracklist = [-1, 2, 4, 0]
-#octavemode = 2
+#octavemod = 2
 
 # Eurythmics - Sweet dreams
 #tracklist = [-1, 6, 2, 5]
