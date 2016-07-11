@@ -240,7 +240,7 @@ void onExit(int s)
 
 int main(int argc, char *argv[])
 {
-	if (argc != 2) // First argument is the program name, never forgetti
+	if (argc != 2 and argc != 3) // First argument is the program name, never forgetti
 	{
 		std::cout << "Invalid number of arguments." << std::endl;
 		return 1;
@@ -257,10 +257,13 @@ int main(int argc, char *argv[])
 	delay(500);
 	std::cout << "Done." << std::endl;
 
-	std::cout << "Resetting frives... " << std::flush;
-	resetAll(0); // For now just always reset it fully because it seems to make a louder noise when oscillating
-	delay(500);
-	std::cout << "Done." << std::endl;
+	if (argc != 3 or bool(argv[2])) // Third optional argument for whether to reset or not
+	{
+		std::cout << "Resetting frives... " << std::flush;
+		resetAll(0); // For now just always reset it fully because it seems to make a louder noise when oscillating
+		delay(500);
+		std::cout << "Done." << std::endl;
+	}
 
 	std::cout << "Starting serial thread loop... " << std::flush;
 	std::thread sl(serialLoop, fd, std::ref(currentPeriod));
