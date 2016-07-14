@@ -51,7 +51,7 @@ if len(sys.argv) != 2:
 	print "Invalid argument count!"
 	sys.exit()
 
-song ="../../midis/"+sys.argv[1]+".mid"
+song ="../midis/"+sys.argv[1]+".mid"
 
 print "Getting track list..."
 #tracklist = getChannels(song)
