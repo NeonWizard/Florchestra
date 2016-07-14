@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
 	delay(500);
 	std::cout << "Done." << std::endl;
 
-	if (argc != 3 or bool(argv[2])) // Third optional argument for whether to reset or not
+	if (argc != 3 or bool(argv[2][0]-48)) // Third optional argument for whether to reset or not
 	{
 		std::cout << "Resetting frives... " << std::flush;
 		resetAll(0); // For now just always reset it fully because it seems to make a louder noise when oscillating
