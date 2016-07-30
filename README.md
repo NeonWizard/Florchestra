@@ -1,9 +1,9 @@
 # Serial communication
-The pi that controls the notes to be played and sends them over the serial link will be called rpi1.
+The pi that controls the notes to be played and sends them over the serial link will be called the master.
 
-The pi that makes the frives play the notes will be rpi2.
+The pi that makes the frives play the notes will be called the player.
 
-rpi1 will need to send every note needed to rpi2 and rpi2 will need to handle them on time.
+The master chip will need to send every note needed to the player and the player will need to handle them on time.
 
 **Information that needs to be sent:**
 
