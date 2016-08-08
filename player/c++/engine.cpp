@@ -28,25 +28,26 @@ typedef uint8_t byte;
 // ------------------------------
 //  Individual frive information
 // ------------------------------
-byte pins[4][3] = {
+byte pins[5][3] = {
 	// Dir, step, led
+	{5, 12, 16},
 	{20, 21, 22},
 	{23, 24, 25},
 	{13, 26, 6},
-	{17, 18, 19},
+	{17, 18, 19}
 };
 // Keep track of amount of frives for loop purposes
-byte friveCount = 4;
+byte friveCount = 5;
 
 // 3.5" frives have 80 tracks and 5.25" have 50
 // Subtract 8 to add a bit of padding
-byte MAX_POSITIONS[]    = {72, 72, 72, 72}; // Constants
-byte currentPositions[] = {0, 0, 0, 0};
-byte currentDirection[] = {0, 0, 0, 0};
-bool currentVoltage[]   = {0, 0, 0, 0};
+byte MAX_POSITIONS[]    = {72, 72, 72, 72, 72}; // Constants
+byte currentPositions[] = {0, 0, 0, 0, 0};
+byte currentDirection[] = {0, 0, 0, 0, 0};
+bool currentVoltage[]   = {0, 0, 0, 0, 0};
 
-unsigned int currentPeriod[] = {0, 0, 0, 0}; // Current period is how long until another step
-unsigned int currentTick[]   = {0, 0, 0, 0}; // Counts how long has passed since the frive has been stepped
+unsigned int currentPeriod[] = {0, 0, 0, 0, 0}; // Current period is how long until another step
+unsigned int currentTick[]   = {0, 0, 0, 0, 0}; // Counts how long has passed since the frive has been stepped
 
 // Initialize the stepmethod variable (0 = Sliding, 1 = Oscillating)
 static bool stepmethod;
