@@ -6,7 +6,7 @@ import midiportnames
 
 class Handler:
 	def __init__(self):
-		self.frives = [0, 0, 0, 0]
+		self.frives = [0, 0, 0, 0, 0, 0]
 
 		inPort = list(set(mido.get_input_names())&set(midiportnames.ins))[0]
 		self.inp = mido.open_input(inPort)
