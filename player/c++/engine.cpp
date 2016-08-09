@@ -176,6 +176,24 @@ void tick()
 			currentTick[3]=0;
 		}
 	}
+	if (currentPeriod[4]>0)
+	{
+		currentTick[4] += delta;
+		if (currentTick[4] >= currentPeriod[4])
+		{
+			STEPFRIVEF(4);
+			currentTick[4]=0;
+		}
+	}
+	if (currentPeriod[5]>0)
+	{
+		currentTick[5] += delta;
+		if (currentTick[5] >= currentPeriod[5])
+		{
+			STEPFRIVEF(5);
+			currentTick[5]=0;
+		}
+	}
 	delayMicroseconds(5); // Prevent the loop from going too fast and giving itself a bad time
 }
 
