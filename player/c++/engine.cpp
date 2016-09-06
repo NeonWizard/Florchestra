@@ -14,7 +14,7 @@
 #include <iostream>
 #include <wiringPi.h>
 #include <wiringSerial.h>
-#include "notes.h"
+#include "notes.hpp"
 #include <thread>
 #include <signal.h>
 
