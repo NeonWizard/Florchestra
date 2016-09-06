@@ -239,9 +239,9 @@ void serialLoop(int fd, unsigned int currentPeriod[])
 		note = (data >> 3) & 0b00011111;
 		frive = data & 0b00000111;
 		if (note < 32 && frive < 8) // Make sure recieved values are in range
-			currentPeriod[frive] = notes[note];
+			currentPeriod[frive] = stepmethod ? notes[note] : notes[note]*2;
 
-		digitalWrite(pins[frive][2], int(note!=0));
+		digitalWrite(pins[frive][2], int(note!=0)); // Turn on the LED
 	}
 }
 
