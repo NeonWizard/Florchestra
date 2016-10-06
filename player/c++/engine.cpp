@@ -14,13 +14,12 @@
 #include <iostream>
 #include <wiringPi.h>
 #include <wiringSerial.h>
-#include "notes.hpp"
 #include <thread>
 #include <signal.h>
+#include "engine.hpp"
+#include "notes.hpp"
 
 // #define STEPFRIVEF stepFrive_sliding // stepFrive_oscillating or stepFrive_sliding
-
-typedef uint8_t byte;
 
 // =========
 //  Globals
@@ -225,6 +224,27 @@ void resetAll(bool method)
 }
 
 void serialLoop(int fd, unsigned int currentPeriod[])
+{
+	signed char data;
+	byte note;
+	byte frive;
+	while(1)
+	{
+		// Read the serial pins hooked up to the other pi to set the notes
+		data = serialGetchar(fd);
+		if (data==-1) continue; // timeout catcher
+
+		// Get bits out of received char
+		note = (data >> 3) & 0b00011111;
+		frive = data & 0b00000111;
+		if (note < 32 && frive < 8) // Make sure recieved values are in range
+			currentPeriod[frive] = stepmethod ? notes[note] : notes[note]*2;
+
+		digitalWrite(pins[frive][2], int(note!=0)); // Turn on the LED
+	}
+}
+
+void serialLoop2(int fd, unsigned int currentPeriod[])
 {
 	signed char data;
 	byte note;
