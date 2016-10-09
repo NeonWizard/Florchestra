@@ -19,4 +19,4 @@ echo ""
 echo ""
 echo ""
 echo ""
-python ~/Raspi_GPIO/florchestra/python/flusicengine_duo.py cantina
+python ~/Florchestra/player/python/flusicengine_duo.py cantina

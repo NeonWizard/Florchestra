@@ -246,19 +246,22 @@ void serialLoop(int fd, unsigned int currentPeriod[])
 
 void serialLoop2(int fd, unsigned int currentPeriod[])
 {
-	signed char data;
+	signed char notedata;
+	signed char frivedata; 
 	byte note;
 	byte frive;
 	while(1)
 	{
 		// Read the serial pins hooked up to the other pi to set the notes
-		data = serialGetchar(fd);
-		if (data==-1) continue; // timeout catcher
+		notedata = serialGetchar(fd);
+		if (notedata==-1) continue; // timeout catcher
+		frivedata = serialGetchar(fd);
+		if (frivedata==-1) continue; // timeout catcher
 
 		// Get bits out of received char
-		note = (data >> 3) & 0b00011111;
-		frive = data & 0b00000111;
-		if (note < 32 && frive < 8) // Make sure recieved values are in range
+		note = notedata & 0b00111111; // The note can only be between 0-64
+		frive = frivedata & 0b00000111; // The frive can only be between 0-8
+		if (note < 64 && frive < 8) // Make sure recieved values are in range
 			currentPeriod[frive] = stepmethod ? notes[note] : notes[note]*2;
 
 		digitalWrite(pins[frive][2], int(note!=0)); // Turn on the LED
@@ -306,7 +309,7 @@ int main(int argc, char *argv[])
 	}
 
 	std::cout << "Starting serial thread loop... " << std::flush;
-	std::thread sl(serialLoop, fd, std::ref(currentPeriod));
+	std::thread sl(serialLoop2, fd, std::ref(currentPeriod));
 	delay(500);
 	std::cout << "Done." << std::endl;
 

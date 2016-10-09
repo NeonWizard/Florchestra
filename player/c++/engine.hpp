@@ -13,6 +13,7 @@ void STEPFRIVEF(byte frive);
 
 void tick();
 void serialLoop(int fd, unsigned int currentPeriod[]);
+void serialLoop2(int fd, unsigned int currentPeriod[]);
 
 void resetAll(bool method);
 
