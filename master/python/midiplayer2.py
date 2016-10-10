@@ -26,8 +26,7 @@ def handleRaw(msg, sd): # sd = song data
 		note = 52+((note-64)%12)
 	if note <= 0:
 		# Fix this later
-		print "Jaspar"
-		note = abs(note)%12
+		note = note%12
 
 	# If it isn't playable by the florchestra
 	#if note <= 0 or note > 31: return
