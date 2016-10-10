@@ -8,9 +8,9 @@ def infoToChar(note, frive):
 def sendChar(char):
 	port.write(char)
 
-def sendChars(note, frive):
-	port.write(chr(note))
-	port.write(chr(frive))
-
 def sendNote(note, frive):
 	sendChar(infoToChar(note, frive))
+
+def sendNote2(note, frive):
+	port.write(chr(note))
+	port.write(chr(frive))
