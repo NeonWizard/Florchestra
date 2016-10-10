@@ -37,9 +37,9 @@ def handleRaw(msg, sd): # sd = song data
 		return
 
 	if state:
-		serialcomm.sendChars(note, track)
+		serialcomm.sendNote2(note, track)
 	else:
-		serialcomm.sendChars(0, track)
+		serialcomm.sendNote2(0, track)
 
 outPort = list(set(mido.get_output_names())&set(midiportnames.outs))[0]
 out = mido.open_output(outPort)
