@@ -223,7 +223,7 @@ void resetAll(bool method)
 	}
 }
 
-void serialLoop(int fd, unsigned int currentPeriod[])
+void serialLoop(int fd, unsigned int currentPeriod[], const int notes[])
 {
 	signed char data;
 	byte note;
@@ -244,7 +244,7 @@ void serialLoop(int fd, unsigned int currentPeriod[])
 	}
 }
 
-void serialLoop2(int fd, unsigned int currentPeriod[])
+void serialLoop2(int fd, unsigned int currentPeriod[], const int notes[])
 {
 	signed char notedata;
 	signed char frivedata; 
@@ -283,7 +283,7 @@ void onExit(int s)
 
 int main(int argc, char *argv[])
 {
-	if (argc != 2 and argc != 3) // First argument is the program name, never forgetti
+	if (argc > 4) // First argument is the program name, never forgetti
 	{
 		std::cout << "Invalid number of arguments." << std::endl;
 		return 1;
@@ -300,7 +300,7 @@ int main(int argc, char *argv[])
 	delay(500);
 	std::cout << "Done." << std::endl;
 
-	if (argc != 3 or bool(argv[2][0]-48)) // Third optional argument for whether to reset or not
+	if (argc < 4 or bool(argv[3][0]-48)) // Fourth optional argument for whether to reset or not
 	{
 		std::cout << "Resetting frives... " << std::flush;
 		resetAll(0); // For now just always reset it fully because it seems to make a louder noise when oscillating
@@ -309,7 +309,10 @@ int main(int argc, char *argv[])
 	}
 
 	std::cout << "Starting serial thread loop... " << std::flush;
-	std::thread sl(serialLoop2, fd, std::ref(currentPeriod));
+	bool serialTwo = bool(argv[2][0]-48);
+	std::cout << "Using " << (serialTwo ? "two" : "one") << " byte communication... " << std::flush;
+	const int *notes = serialTwo ? notes64 : notes32;
+	std::thread sl((serialTwo ? serialLoop2 : serialLoop), fd, std::ref(currentPeriod), std::ref(notes));
 	delay(500);
 	std::cout << "Done." << std::endl;
 
