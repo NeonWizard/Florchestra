@@ -1,14 +1,20 @@
 # Serial communication
-The pi that controls the notes to be played and sends them over the serial link will be called the master.
+The pi that controls the notes to be played and sends them over the serial link is called the master.
 
-The pi that makes the frives play the notes will be called the player.
+The pi that makes the frives play the notes is called the player.
 
-The master chip will need to send every note needed to the player and the player will need to handle them on time.
+The master chip sends every note needed to the player and the player handles them on time, delivering an electric oscillation to the appropriate floppy drive.
 
-**Information that needs to be sent:**
+**Information sent with one byte communication:**
 
 * Note - 32 possible - 5 bits
 * Which frive - Up to 8 - 3 bits
+
+**Information sent with two byte communication:**
+
+* Note - 64 possible - 6 bits
+* Which frive - Up to 8 - 3 bits
+
 
 # Notes
 | Index | Note | Frequency(Hz) | Duration(µs) |
@@ -45,7 +51,3 @@ The master chip will need to send every note needed to the player and the player
 | 29 | D#5/Eb5  | 622.25 | 1607 |
 | 30 | E5  | 659.25 | 1517 |
 | 31 | F5  | 698.46 | 1432 |
-
-# Ideas
-Using PWM: https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=113916<br>
-Using wiringPi: http://wiringpi.com/reference/core-functions/
