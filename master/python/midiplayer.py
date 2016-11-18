@@ -3,7 +3,6 @@ import mido
 mido.set_backend("mido.backends.pygame")
 
 import serialcomm
-import midiportnames
 import playertools
 
 def handleRaw(msg, sd): # sd = song data
@@ -41,9 +40,6 @@ def handleRaw(msg, sd): # sd = song data
 	else:
 		serialcomm.sendNote(0, track)
 
-outPort = list(set(mido.get_output_names())&set(midiportnames.outs))[0]
-out = mido.open_output(outPort)
-
 if len(sys.argv) != 2:
 	print "Invalid argument count!"
 	sys.exit()
@@ -57,5 +53,4 @@ print "Ready to begin."
 
 for message in songfile.play():
 	handleRaw(message, songdata)
-	#out.send(message)
-out.close()
+
