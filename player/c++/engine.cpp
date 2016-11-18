@@ -283,7 +283,7 @@ void onExit(int s)
 
 int main(int argc, char *argv[])
 {
-	if (argc > 4) // First argument is the program name, never forgetti
+	if (argc > 4 || argc < 2) // First argument is the program name, never forgetti
 	{
 		std::cout << "Invalid number of arguments." << std::endl;
 		return 1;
