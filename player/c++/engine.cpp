@@ -281,9 +281,10 @@ void onExit(int s)
 	exit(1);
 }
 
+// Step method(!), 32/64 range(!), do reset
 int main(int argc, char *argv[])
 {
-	if (argc > 4 || argc < 2) // First argument is the program name, never forgetti
+	if (argc > 4 || argc < 3) // First argument is the program name, never forgetti
 	{
 		std::cout << "Invalid number of arguments." << std::endl;
 		return 1;
@@ -300,7 +301,7 @@ int main(int argc, char *argv[])
 	delay(500);
 	std::cout << "Done." << std::endl;
 
-	if (argc < 4 or bool(argv[3][0]-48)) // Fourth optional argument for whether to reset or not
+	if (argc < 4 or bool(argv[3][0]-48)) // Third optional argument for whether to reset or not
 	{
 		std::cout << "Resetting frives... " << std::flush;
 		resetAll(0); // For now just always reset it fully because it seems to make a louder noise when oscillating
