@@ -10,6 +10,14 @@ class Handler:
 
 		inPort = list(set(mido.get_input_names())&set(midiportnames.ins))[0]
 		self.inp = mido.open_input(inPort)
+		
+		self.resetFrives()
+	
+	def resetFrives(self):
+		for i in range(len(self.frives)):
+			serialcomm.sendNote(0, i)
+			self.frives[i] = 0
+			
 
 	def listen(self):
 		print("Now listening for MIDI signals.")
