@@ -1,7 +1,7 @@
 from time import sleep
 from serialcomm import *
 
-waittime = .2
+waittime = .15
 
 try:
 	for _ in range(2):
