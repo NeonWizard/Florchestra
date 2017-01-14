@@ -23,9 +23,11 @@ def handleRaw(msg, sd): # sd = song data
 	# Capping on either side of the range
 	if note > 63:
 		note = 52+((note-64)%12)
+	if note > 41:
+		note -= 12
 	if note <= 0:
 		# Fix this later
-		note = note%12
+		note += 12
 
 	# If it isn't playable by the florchestra
 	#if note <= 0 or note > 31: return
