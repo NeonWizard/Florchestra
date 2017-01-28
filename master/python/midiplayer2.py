@@ -11,7 +11,8 @@ def handleRaw(msg, sd): # sd = song data
 
 	# Get the channel it's on and convert to floppy track
 	if msg.channel not in sd["TRACK_KEY"]: return
-	track = sd["TRACK_KEY"].index(msg.channel)
+	#track = sd["TRACK_KEY"].index(msg.channel)
+	tracks = [i for i, x in enumerate(sd["TRACK_KEY"]) if x == msg.channel]
 
 	# Determine if it's a NOTE_ON or NOTE_OFF
 	state = msg.type=="note_on" and msg.velocity > 0
@@ -36,10 +37,11 @@ def handleRaw(msg, sd): # sd = song data
 		print note
 		return
 
-	if state:
-		serialcomm.sendNote2(note, track)
-	else:
-		serialcomm.sendNote2(0, track)
+	for track in tracks:
+		if state:
+			serialcomm.sendNote2(note, track)
+		else:
+			serialcomm.sendNote2(0, track)
 
 if len(sys.argv) != 2:
 	print "Invalid argument count!"
