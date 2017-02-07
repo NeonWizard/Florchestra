@@ -21,13 +21,10 @@ def handleRaw(msg, sd): # sd = song data
 	note = msg.note-55
 	note += sd["TRANSPOSE"] # Transposition
 
-	# Capping on either side of the range
-	if note > 63:
-		note = 52+((note-64)%12)
-	if note > 41:
+	# I overcomplicated this.
+	while note > 41:
 		note -= 12
-	if note <= 0:
-		# Fix this later
+	while note <= 0:
 		note += 12
 
 	# If it isn't playable by the florchestra
