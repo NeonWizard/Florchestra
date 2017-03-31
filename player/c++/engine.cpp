@@ -24,6 +24,7 @@
 // =========
 //  Globals
 // =========
+byte relayPin = 2; // Pin that turns the power supply on and off
 // ------------------------------
 //  Individual frive information
 // ------------------------------
@@ -64,6 +65,8 @@ int setup()
 		pinMode(pins[i][1], OUTPUT); // Step pin
 		pinMode(pins[i][2], OUTPUT); // LED pin
 	}
+	pinMode(relayPin, OUTPUT);
+	digitalWrite(relayPin, 1);
 
 	// Starting the serial device and returning file descriptor
 	int fd;
@@ -284,11 +287,12 @@ void onExit(int s)
 		digitalWrite(pins[i][1], 0);
 		digitalWrite(pins[i][2], 0);
 	}
+	digitalWrite(relayPin, 0);
 	std::cout << "Done." << std::endl;
 	exit(1);
 }
 
-// Step method(!), 32/64 range(!), do reset
+// Step method(!), 32/64 range(!), do reset (default: true)
 int main(int argc, char *argv[])
 {
 	if (argc > 4 || argc < 3) // First argument is the program name, never forgetti
