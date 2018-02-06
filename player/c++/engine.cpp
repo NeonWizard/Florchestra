@@ -243,13 +243,6 @@ void serialLoop(int fd, unsigned int currentPeriod[], const int notes[])
 		if (note < 32 && frive < 8) // Make sure recieved values are in range
 			currentPeriod[frive] = stepmethod ? notes[note] : notes[note]*2;
 
-		std::cout << "\t\t\t\t\t\tFloppy drive " << int(frive);
-		if (note != 0) {
-			std::cout << " now playing note #" << int(note) << std::endl;
-		} else {
-			std::cout << " stopped playing." << std::endl;  
-		}
-
 		digitalWrite(pins[frive][2], int(note!=0)); // Turn on the LED
 	}
 }
