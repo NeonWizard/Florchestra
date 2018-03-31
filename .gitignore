@@ -65,3 +65,6 @@ target/
 *.exe
 *.out
 *.app
+
+# Custom files
+engine
