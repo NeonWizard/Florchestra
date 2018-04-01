@@ -24,31 +24,28 @@
 // =========
 //  Globals
 // =========
-byte relayPin = 2; // Pin that turns the power supply on and off
-// ------------------------------
-//  Individual frive information
-// ------------------------------
-byte pins[6][3] = {
-	// Dir, step, led
-	{27, 3, 4},
-	{5, 12, 16},
-	{20, 21, 22},
-	{23, 24, 25},
-	{13, 26, 6},
-	{17, 18, 19}
+const byte relayPin = 2; 	// Pin that turns the power supply on and off
+const byte friveCount = 6; 	// Keep track of amount of frives for loop purposes
+const byte pins[6][3] = { 	// Frive pins
+//	dir 	step 	LED
+	{27, 	3, 		4 },
+	{5, 	12, 	16},
+	{20, 	21, 	22},
+	{23, 	24, 	25},
+	{13, 	26, 	6 },
+	{17, 	18, 	19}
 };
-// Keep track of amount of frives for loop purposes
-byte friveCount = 6;
 
 // 3.5" frives have 80 tracks and 5.25" have 50
 // Subtract 8 to add a bit of padding
-byte MAX_POSITIONS[]    = {72, 72, 72, 72, 72, 72}; // Constants
-byte currentPositions[] = {0, 0, 0, 0, 0, 0};
-byte currentDirection[] = {0, 0, 0, 0, 0, 0};
-bool currentVoltage[]   = {0, 0, 0, 0, 0, 0};
+const byte MAX_POSITIONS[] = {72, 72, 72, 72, 72, 72};
 
-unsigned int currentPeriod[] = {0, 0, 0, 0, 0, 0}; // Current period is how long until another step
-unsigned int currentTick[]   = {0, 0, 0, 0, 0, 0}; // Counts how long has passed since the frive has been stepped
+byte currentPositions[] 	= {0, 0, 0, 0, 0, 0};
+bool currentDirection[]		= {0, 0, 0, 0, 0, 0};
+bool currentVoltage[]		= {0, 0, 0, 0, 0, 0};
+
+unsigned int currentPeriod[] = {0, 0, 0, 0, 0, 0}; // How long until another step
+unsigned int currentTick[]   = {0, 0, 0, 0, 0, 0}; // How long it's been since last step
 
 // Initialize the stepmethod variable (0 = Sliding, 1 = Oscillating)
 static bool stepmethod;
@@ -85,7 +82,8 @@ int setup()
 void stepFrive_oscillating(byte frive)
 {
 	// Switch the direction every time the step pin is at a high voltage
-	currentDirection[frive] = currentVoltage[frive] ? !currentDirection[frive] : currentDirection[frive];
+	if (currentVoltage[frive])
+		currentDirection[frive] = !currentDirection[frive];
 	digitalWrite(pins[frive][0], currentDirection[frive]);
 
 	// Toggle the step pin
@@ -131,14 +129,14 @@ void STEPFRIVEF(byte frive)
 	if (stepmethod) stepFrive_oscillating(frive); else stepFrive_sliding(frive);
 }
 
+static unsigned int cur_time = 0;
+static unsigned int last_time = 0;
 void tick()
 {
 	// Get delta time
-	static unsigned int time = 0;
-	static unsigned int lasttime = 0;
-	time = micros();
-	unsigned int delta = time-lasttime;
-	lasttime = time;
+	cur_time = micros();
+	const unsigned int delta = cur_time-last_time;
+	last_time = cur_time;
 
 	// Go through each frive and check if it's time to call a stepping function
 	// (I don't use a for loop to iterate over each one, because I'm afraid it'll slow it down)
