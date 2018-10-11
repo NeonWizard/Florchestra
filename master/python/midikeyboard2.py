@@ -24,6 +24,10 @@ class Handler:
 	def parseNote(self, msg):
 		note = msg.note - 37
 		if note < 0 or note > 63: return
+		
+		if note > 42:
+			note -= 12
+
 		if msg.type == "note_on" and msg.velocity > 0:
 			self.playNote(note)
 		else:
