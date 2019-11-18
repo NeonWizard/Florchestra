@@ -10,12 +10,12 @@ class Handler:
 		self.frives = [0, 0, 0, 0, 0, 0]
 
 		self.resetFrives()
-	
+
 	def resetFrives(self):
 		for i in range(len(self.frives)):
 			serialcomm.sendNote(0, i)
 			self.frives[i] = 0
-			
+
 
 	def sortAndSend(self):
 		self.frives = sorted(self.frives, reverse=True)

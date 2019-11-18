@@ -1,3 +1,5 @@
+import mido
+
 def getChannels(songfile):
 	channels = []
 	for message in songfile:
@@ -22,5 +24,5 @@ def readSongData(name):
 	songdata["TRANSPOSE"] = int(songdata["TRANSPOSE"])
 	songdata["TRACK_KEY"] = [int(i) for i in songdata["TRACK_KEY"].replace(" ", "").split(",")]
 
-	print songdata
+	print(songdata)
 	return songdata
