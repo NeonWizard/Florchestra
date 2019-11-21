@@ -68,3 +68,4 @@ target/
 
 # Custom files
 engine
+.vscode
