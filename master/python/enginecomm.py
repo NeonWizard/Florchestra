@@ -2,7 +2,7 @@ import sys
 import subprocess
 import time
 
-command = ["../player/c++/engine", "0", "1"]
+command = ["../../player/c++/engine", "0", "1"]
 process = subprocess.Popen(command, stdin=subprocess.PIPE)
 
 def infoToChar(note, frive):

@@ -250,8 +250,8 @@ void commLoop2(unsigned int currentPeriod[], const int notes[])
 	while(1)
 	{
 		// Read the data sent from python controller over stdin
-		std::cin << notedata;
-		std::cin << frivedata;
+		std::cin >> notedata;
+		std::cin >> frivedata;
 
 		// Get bits out of received char
 		note = notedata & 0b00111111; // The note can only be between 0-64
