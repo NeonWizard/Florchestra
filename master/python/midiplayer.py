@@ -2,7 +2,8 @@ import sys
 import mido
 mido.set_backend("mido.backends.pygame")
 
-import serialcomm
+# import serialcomm as comm
+import enginecomm as comm
 import playertools
 
 def handleRaw(msg, sd): # sd = song data
@@ -26,33 +27,32 @@ def handleRaw(msg, sd): # sd = song data
 		note = 20+((note-32)%12)
 	if note <= 0:
 		# Fix this later
-		print "Jaspar"
+		print("Jaspar")
 		note = abs(note)%12
 
 	# If it isn't playable by the florchestra
 	#if note <= 0 or note > 31: return
 	if note <= 0: return
 	if note > 31:
-		print note
+		print(note)
 		return
 
 	for track in tracks:
 		if state:
-			serialcomm.sendNote(note, track)
+			comm.sendNote(note, track)
 		else:
-			serialcomm.sendNote(0, track)
+			comm.sendNote(0, track)
 
 if len(sys.argv) != 2:
-	print "Invalid argument count!"
+	print("Invalid argument count!")
 	sys.exit()
 
-print "Getting song info..."
+print("Getting song info...")
 songdata = playertools.readSongData("../songs/"+sys.argv[1])
-print "Reading MIDI file into memory..."
+print("Reading MIDI file into memory...")
 songfile = mido.MidiFile("../songs/"+songdata["MIDI_NAME"]+".mid")
 
-print "Ready to begin."
+print("Ready to begin.")
 
 for message in songfile.play():
 	handleRaw(message, songdata)
-

@@ -2,7 +2,8 @@ import sys
 import mido
 mido.set_backend("mido.backends.pygame")
 
-import serialcomm
+# import serialcomm as comm
+import enginecomm as comm
 import playertools
 
 class Handler:
@@ -13,14 +14,14 @@ class Handler:
 
 	def resetFrives(self):
 		for i in range(len(self.frives)):
-			serialcomm.sendNote(0, i)
+			comm.sendNote(0, i)
 			self.frives[i] = 0
 
 
 	def sortAndSend(self):
 		self.frives = sorted(self.frives, reverse=True)
 		for i in range(len(self.frives)):
-			serialcomm.sendNote(self.frives[i], i)
+			comm.sendNote(self.frives[i], i)
 
 	def parseNote(self, msg, sd):
 		if isinstance(msg, mido.MetaMessage) or not hasattr(msg, "note"): # Filter out meta messages
@@ -34,7 +35,7 @@ class Handler:
 			note = 20+((note-32)%12)
 		if note <= 0:
 			# Fix this later
-			print "Jaspar"
+			print("Jaspar")
 			note = abs(note)%12
 
 		if msg.type == "note_on" and msg.velocity > 0:
@@ -54,22 +55,22 @@ class Handler:
 		for i in range(len(self.frives)):
 			if self.frives[i] == note:
 				self.frives[i] = 0
-				serialcomm.sendNote(0, i)
+				comm.sendNote(0, i)
 				# Putting a return statement here could reduce lag but also might help clear out bugged notes
 
 
 if len(sys.argv) != 2:
-	print "Invalid argument count!"
+	print("Invalid argument count!")
 	sys.exit()
 
-print "Getting song info..."
+print("Getting song info...")
 songdata = playertools.readSongData("../songs/"+sys.argv[1])
-print "Reading MIDI file into memory..."
+print("Reading MIDI file into memory...")
 songfile = mido.MidiFile("../songs/"+songdata["MIDI_NAME"]+".mid")
 
 h = Handler()
 
-print "Ready to begin."
+print("Ready to begin.")
 
 for message in songfile.play():
 	h.parseNote(message, songdata)

@@ -2,7 +2,8 @@ import sys
 import mido
 mido.set_backend("mido.backends.pygame")
 
-import serialcomm
+# import serialcomm as comm
+import enginecomm as comm
 import playertools
 
 class Handler:
@@ -13,14 +14,14 @@ class Handler:
 
 	def resetFrives(self):
 		for i in range(len(self.frives)):
-			serialcomm.sendNote2(0, i)
+			comm.sendNote2(0, i)
 			self.frives[i] = 0
 
 
 	def sortAndSend(self):
 		self.frives = sorted(self.frives, reverse=True)
 		for i in range(len(self.frives)):
-			serialcomm.sendNote2(self.frives[i], i)
+			comm.sendNote2(self.frives[i], i)
 
 	def parseNote(self, msg, sd):
 		if isinstance(msg, mido.MetaMessage) or not hasattr(msg, "note"): # Filter out meta messages
@@ -51,7 +52,7 @@ class Handler:
 		for i in range(len(self.frives)):
 			if self.frives[i] == note:
 				self.frives[i] = 0
-				serialcomm.sendNote2(0, i)
+				comm.sendNote2(0, i)
 				# Putting a return statement here could reduce lag but also might help clear out bugged notes
 
 
