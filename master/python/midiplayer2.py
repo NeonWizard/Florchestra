@@ -41,7 +41,7 @@ def handleRaw(msg, sd): # sd = song data
 		else:
 			comm.sendNote2(0, track)
 
-if len(sys.argv) != 2:
+if len(sys.argv) != 3 and len(sys.argv) != 4:
 	print("Invalid argument count!")
 	sys.exit()
 
@@ -49,6 +49,8 @@ print("Getting song info...")
 songdata = playertools.readSongData("../songs/"+sys.argv[1])
 print("Reading MIDI file into memory...")
 songfile = mido.MidiFile("../songs/"+songdata["MIDI_NAME"]+".mid")
+print("Starting engine...")
+comm.init(sys.argv[2], sys.argv[3])
 
 print("Ready to begin.")
 
