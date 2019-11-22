@@ -17,3 +17,7 @@ The master chip sends every note needed to the player and the player handles the
 
 * Note - 64 possible - 6 bits
 * Which frive - Up to 8 - 3 bits
+
+# Todo
+ - [ ] Merge midiplayer1-4.py into a singular midiplayer file
+ - [ ] From python2.7 to python3
