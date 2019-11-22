@@ -6,7 +6,11 @@ process = None
 def init(sliding, b):
 	global process
 	command = ["../../player/c++/engine", sliding, b]
-	process = subprocess.Popen(command, stdin=subprocess.PIPE)
+	process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+	while True:
+		line = process.stdout.readline().rstrip()
+		if line == "Ready to begin.": break
+		print(line)
 
 def infoToChar(note, frive):
 	return chr((note << 3) | frive)
