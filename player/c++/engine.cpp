@@ -1,8 +1,3 @@
-// ======================
-//    Wesley Miravete
-//         2016
-// ======================
-
 // Notes:
 // Try to use as small of types as you can for optimization purposes
 // Avoid operations and conversions when possible
@@ -53,7 +48,7 @@ static bool stepmethod;
 // =============
 //   Functions
 // =============
-int setup()
+void setup()
 {
 	wiringPiSetupGpio();
 	for (byte i = 0; i < friveCount; i++)
@@ -65,14 +60,16 @@ int setup()
 	pinMode(relayPin, OUTPUT);
 	digitalWrite(relayPin, 1);
 
-	// Starting the serial device and returning file descriptor
-	int fd;
-	if ((fd = serialOpen("/dev/ttyAMA0", 115200)) < 0)
-	{
-		std::cout << "Could not open serial device." << std::endl;
-		return 1;
-	}
-	return fd;
+	// // Starting the serial device and returning file descriptor
+	// int fd;
+	// if ((fd = serialOpen("/dev/ttyAMA0", 115200)) < 0)
+	// {
+	// 	std::cout << "Could not open serial device." << std::endl;
+	// 	return 1;
+	// }
+	// return fd;
+
+	return;
 }
 
 // NOTE: I've noticed that the sliding method seems to produce notes that are an octave higher than they should be.
@@ -224,16 +221,15 @@ void resetAll(bool method)
 	}
 }
 
-void serialLoop(int fd, unsigned int currentPeriod[], const int notes[])
+void commLoop(unsigned int currentPeriod[], const int notes[])
 {
 	signed char data;
 	byte note;
 	byte frive;
 	while(1)
 	{
-		// Read the serial pins hooked up to the other pi to set the notes
-		data = serialGetchar(fd);
-		if (data==-1) continue; // timeout catcher
+		// Read the data sent from python controller over stdin
+		data = getchar();
 
 		// Get bits out of received char
 		note = (data >> 3) & 0b00011111;
@@ -245,19 +241,17 @@ void serialLoop(int fd, unsigned int currentPeriod[], const int notes[])
 	}
 }
 
-void serialLoop2(int fd, unsigned int currentPeriod[], const int notes[])
+void commLoop2(unsigned int currentPeriod[], const int notes[])
 {
 	signed char notedata;
-	signed char frivedata; 
+	signed char frivedata;
 	byte note;
 	byte frive;
 	while(1)
 	{
-		// Read the serial pins hooked up to the other pi to set the notes
-		notedata = serialGetchar(fd);
-		if (notedata==-1) continue; // timeout catcher
-		frivedata = serialGetchar(fd);
-		if (frivedata==-1) continue; // timeout catcher
+		// Read the data sent from python controller over stdin
+		notedata = getchar();
+		frivedata = getchar();
 
 		// Get bits out of received char
 		note = notedata & 0b00111111; // The note can only be between 0-64
@@ -299,7 +293,7 @@ int main(int argc, char *argv[])
 	std::cout << "Done." << std::endl;
 
 	std::cout << "Setting up... " << std::flush;
-	int fd = setup();
+	setup();
 	delay(500);
 	std::cout << "Done." << std::endl;
 
@@ -311,11 +305,11 @@ int main(int argc, char *argv[])
 		std::cout << "Done." << std::endl;
 	}
 
-	std::cout << "Starting serial thread loop... " << std::flush;
-	bool serialTwo = bool(argv[2][0]-48);
-	std::cout << "Using " << (serialTwo ? "two" : "one") << " byte communication... " << std::flush;
-	const int *notes = serialTwo ? notes64 : notes32;
-	std::thread sl((serialTwo ? serialLoop2 : serialLoop), fd, std::ref(currentPeriod), std::ref(notes));
+	std::cout << "Starting comm thread loop... " << std::flush;
+	bool commTwo = bool(argv[2][0]-48);
+	std::cout << "Using " << (commTwo ? "two" : "one") << " byte communication... " << std::flush;
+	const int *notes = commTwo ? notes64 : notes32;
+	std::thread sl((commTwo ? commLoop2 : commLoop), std::ref(currentPeriod), std::ref(notes));
 	delay(500);
 	std::cout << "Done." << std::endl;
 

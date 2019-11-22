@@ -5,15 +5,15 @@
 
 typedef uint8_t byte;
 
-int setup();
+void setup();
 
 void stepFrive_oscillating(byte frive);
 void stepFrive_sliding(byte frive);
 void STEPFRIVEF(byte frive);
 
 void tick();
-void serialLoop(int fd, unsigned int currentPeriod[], const int notes[]);
-void serialLoop2(int fd, unsigned int currentPeriod[], const int notes[]);
+void commLoop(unsigned int currentPeriod[], const int notes[]);
+void commLoop2(unsigned int currentPeriod[], const int notes[]);
 
 void resetAll(bool method);
 
