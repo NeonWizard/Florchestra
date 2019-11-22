@@ -23,7 +23,7 @@ const byte relayPin = 2; 	// Pin that turns the power supply on and off
 const byte friveCount = 6; 	// Keep track of amount of frives for loop purposes
 const byte pins[6][3] = { 	// Frive pins
 //	dir 	step 	LED
-	{27, 	3, 		4 },
+	{27, 	3, 		8 },
 	{5, 	12, 	16},
 	{20, 	21, 	22},
 	{23, 	24, 	25},
