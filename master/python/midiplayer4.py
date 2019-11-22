@@ -56,7 +56,7 @@ class Handler:
 				# Putting a return statement here could reduce lag but also might help clear out bugged notes
 
 
-if len(sys.argv) != 3 and len(sys.argv) != 4:
+if len(sys.argv) < 2 and len(sys.argv) > 3:
 	print("Invalid argument count!")
 	sys.exit()
 
@@ -65,7 +65,7 @@ songdata = playertools.readSongData("../songs/"+sys.argv[1])
 print("Reading MIDI file into memory...")
 songfile = mido.MidiFile("../songs/"+songdata["MIDI_NAME"]+".mid")
 print("Starting engine...")
-comm.init(sys.argv[2], sys.argv[3])
+comm.init(sys.argv[2] if len(sys.argv) == 3 else "1", "1")
 
 h = Handler()
 

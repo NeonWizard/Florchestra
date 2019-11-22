@@ -3,9 +3,9 @@ import subprocess
 import time
 
 process = None
-def init(sliding, b):
+def init(stepmethod, b):
 	global process
-	command = ["../../player/c++/engine", sliding, b]
+	command = ["../../player/c++/engine", stepmethod, b]
 	process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 	while True:
 		line = process.stdout.readline().rstrip()
