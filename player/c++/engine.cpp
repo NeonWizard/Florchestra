@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <cstdio>
 #include <iostream>
+#include <math.h>
 #include <wiringPi.h>
 #include <wiringSerial.h>
 #include <thread>
@@ -40,6 +41,7 @@ bool currentDirection[]		= {0, 0, 0, 0, 0, 0};
 bool currentVoltage[]		= {0, 0, 0, 0, 0, 0};
 
 unsigned int currentPeriod[] = {0, 0, 0, 0, 0, 0}; // How long until another step
+signed int arpTrack[] = {-1, -1, -1, -1, -1, -1}; // -1 = not arpeggiating
 unsigned int currentTick[]   = {0, 0, 0, 0, 0, 0}; // How long it's been since last step
 
 // Initialize the stepmethod variable (0 = Sliding, 1 = Oscillating)
@@ -221,7 +223,7 @@ void resetAll(bool method)
 	}
 }
 
-void commLoop(unsigned int currentPeriod[], const int notes[])
+void commLoop(unsigned int currentPeriod[], const int notes[], signed int arpTrack[])
 {
 	signed char data;
 	byte note;
@@ -241,25 +243,42 @@ void commLoop(unsigned int currentPeriod[], const int notes[])
 	}
 }
 
-void commLoop2(unsigned int currentPeriod[], const int notes[])
+void commLoop2(unsigned int currentPeriod[], const int notes[], signed int arpTrack[])
 {
-	signed char notedata;
-	signed char frivedata;
-	byte note;
-	byte frive;
 	while(1)
 	{
 		// Read the data sent from python controller over stdin
-		notedata = getchar();
-		frivedata = getchar();
+		getchar();
+		if (arpTrack[3] == -1) {
+			arpTrack[3] = 0;
+		} else {
+			arpTrack[3] = -1;
+		}
 
 		// Get bits out of received char
-		note = notedata & 0b00111111; // The note can only be between 0-64
-		frive = frivedata & 0b00000111; // The frive can only be between 0-8
-		if (note < 64 && frive < 8) // Make sure recieved values are in range
-			currentPeriod[frive] = stepmethod ? notes[note] : notes[note]*2;
 
-		digitalWrite(pins[frive][2], int(note!=0)); // Turn on the LED
+		digitalWrite(pins[3][2], int(arpTrack[3] != -1)); // Turn on the LED
+	}
+}
+
+void arpLoop(unsigned int currentPeriod[], signed int arpTrack[]) {
+	while (1) {
+		for (int i = 0; i < 6; i++) {
+			if (arpTrack[i] != -1) {
+				switch(arpTrack[i]) {
+					case (0):
+					case (7):
+						arpTrack[i] = -3; break;
+					case (-3):
+						arpTrack[i] = -4; break;
+					case (-4):
+						arpTrack[i] = 7; break;
+				}
+				currentPeriod[i] = currentPeriod[i] * pow(1.059463, arpTrack[i]);
+			}
+		}
+
+		delayMicroseconds(35000);
 	}
 }
 
@@ -309,10 +328,12 @@ int main(int argc, char *argv[])
 	bool commTwo = bool(argv[2][0]-48);
 	std::cout << "Using " << (commTwo ? "two" : "one") << " byte communication... " << std::flush;
 	const int *notes = commTwo ? notes64 : notes32;
-	std::thread sl((commTwo ? commLoop2 : commLoop), std::ref(currentPeriod), std::ref(notes));
+	std::thread sl((commTwo ? commLoop2 : commLoop), std::ref(currentPeriod), std::ref(notes), std::ref(arpTrack));
+	std::thread sl2((arpLoop), std::ref(currentPeriod), std::ref(arpTrack));
 	delay(500);
 	std::cout << "Done." << std::endl;
 
+	currentPeriod[3] = 4545;
 	std::cout << "Ready to begin." << std::endl;
 
 	while(1)

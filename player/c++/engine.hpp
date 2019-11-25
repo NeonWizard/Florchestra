@@ -12,8 +12,9 @@ void stepFrive_sliding(byte frive);
 void STEPFRIVEF(byte frive);
 
 void tick();
-void commLoop(unsigned int currentPeriod[], const int notes[]);
-void commLoop2(unsigned int currentPeriod[], const int notes[]);
+void arpLoop(unsigned int currentPeriod[], signed int arpTrack[]);
+void commLoop(unsigned int currentPeriod[], const int notes[], signed int arpTrack[]);
+void commLoop2(unsigned int currentPeriod[], const int notes[], signed int arpTrack[]);
 
 void resetAll(bool method);
 
