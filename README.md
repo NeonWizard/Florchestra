@@ -20,4 +20,4 @@ The master chip sends every note needed to the player and the player handles the
 
 # Todo
  - [ ] Merge midiplayer1-4.py into a singular midiplayer file
- - [ ] From python2.7 to python3
+ - [x] From python2.7 to python3
