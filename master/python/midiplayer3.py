@@ -76,3 +76,5 @@ print("Ready to begin.")
 
 for message in songfile.play():
 	h.parseNote(message, songdata)
+
+comm.exit()

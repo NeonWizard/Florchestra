@@ -1,5 +1,5 @@
 import sys
-import subprocess
+import subprocess, signal
 import time
 
 process = None
@@ -11,6 +11,9 @@ def init(stepmethod, b):
 		line = process.stdout.readline().rstrip()
 		if line == "Ready to begin.": break
 		print(line)
+
+def exit():
+	process.send_signal(signal.SIGINT)
 
 def infoToChar(note, frive):
 	return chr((note << 3) | frive)

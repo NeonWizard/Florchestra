@@ -67,9 +67,13 @@ songfile = mido.MidiFile("../songs/"+songdata["MIDI_NAME"]+".mid")
 print("Starting engine...")
 comm.init(sys.argv[2] if len(sys.argv) == 3 else "1", "1")
 
+#songfile.ticks_per_beat = songfile.ticks_per_beat * 1.5
+
 h = Handler()
 
 print("Ready to begin.")
 
 for message in songfile.play():
 	h.parseNote(message, songdata)
+
+comm.exit()

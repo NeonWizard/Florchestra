@@ -56,3 +56,5 @@ print("Ready to begin.")
 
 for message in songfile.play():
 	handleRaw(message, songdata)
+
+comm.exit()
